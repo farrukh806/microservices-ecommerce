@@ -15,5 +15,5 @@ fastify.listen({ port: PORT }, function (err, address) {
     process.exit(1);
   }
   // Server is now listening on ${address}
-  console.log(`Order service is running on port ${PORT}`)
+  console.log(`Order service is running on port ${address}`)
 });
