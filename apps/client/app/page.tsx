@@ -18,7 +18,7 @@ export default async function Home({
         alt="Featured Product"
       />
       <Categories activeCategory={activeCategory} />
-      <ProductList />
+      <ProductList activeCategory={activeCategory} />
     </section>
   );
 }

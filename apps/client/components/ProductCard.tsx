@@ -11,13 +11,15 @@ const ProductCard: React.FC<(typeof products)[0]> = (props) => {
   return (
     <div className="bg-white shadow-md product-card rounded">
       {typeof selectedColor === "string" && (
-        <Image
-          src={images[selectedColor as keyof typeof images] as string}
-          width={320}
-          height={430}
-          className="w-full"
-          alt={name}
-        />
+        <div className="relative w-full aspect-320/430 overflow-hidden bg-gray-100">
+          <Image
+            src={images[selectedColor as keyof typeof images] as string}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover"
+            alt={name}
+          />
+        </div>
       )}
       <h3 className="px-2">{name}</h3>
       <p className="text-gray-500 tracking-tight text-sm px-2">
