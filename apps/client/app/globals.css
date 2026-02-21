@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 .product-list {
-                       /*image title description size/color  */
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
+  /*image title description size/color  */
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
 }
 
 .product-card {
-    display: grid;
-    min-height: 0;
-    grid-row: span 4;
-    grid-template-rows: subgrid;
+  display: grid;
+  min-height: 0;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+}
+
+button, select, option {
+    cursor: pointer;
 }

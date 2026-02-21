@@ -27,15 +27,15 @@ const ProductCard: React.FC<(typeof products)[0]> = (props) => {
           alt={name}
         />
       )}
-      <h3 className="p-2">{name}</h3>
-      <p className="text-gray-500 tracking-tight text-sm my-4 p-2">
+      <h3 className="px-2">{name}</h3>
+      <p className="text-gray-500 tracking-tight text-sm px-2">
         {props.shortDescription}
       </p>
       <div className="flex gap-5 p-2">
         <div className="flex flex-col">
           <span className="text-xs text-gray-400">Size</span>
           <select
-            className="border-0 focus-within:border-0 w-10 h-5"
+            className="border-0 outline-0 w-10 h-5"
             name="size"
             id="size"
             onChange={(e) => setSelectedSize(e.target.value)}
