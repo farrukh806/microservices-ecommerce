@@ -2,16 +2,25 @@
 
 .product-list {
   /*image title description size/color  */
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
 }
 
 .product-card {
   display: grid;
   min-height: 0;
-  grid-row: span 4;
+  grid-row: span 5;
   grid-template-rows: subgrid;
 }
 
-button, select, option {
-    cursor: pointer;
+button,
+select,
+option {
+  cursor: pointer;
+}
+
+.add-to-cart {
+  flex-shrink: 0;
+}
+.add-to-cart:hover svg {
+  @apply text-gray-500;
 }

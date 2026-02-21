@@ -2,22 +2,14 @@
 import React, { useState } from "react";
 import products from "../app/static/products.json";
 import Image from "next/image";
+import { ShoppingCartIcon } from "lucide-react";
 
 const ProductCard: React.FC<(typeof products)[0]> = (props) => {
-  const {
-    colors,
-    description,
-    id,
-    images,
-    name,
-    price,
-    shortDescription,
-    sizes,
-  } = props;
+  const { colors, images, name, price, shortDescription, sizes } = props;
   const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
   return (
-    <div className="bg-white shadow-md product-card">
+    <div className="bg-white shadow-md product-card rounded">
       {typeof selectedColor === "string" && (
         <Image
           src={images[selectedColor as keyof typeof images] as string}
@@ -60,6 +52,13 @@ const ProductCard: React.FC<(typeof products)[0]> = (props) => {
             ))}
           </div>
         </div>
+      </div>
+      <div className="flex justify-between p-2">
+        <h2 className="font-semibold text-md">${price}</h2>
+        <button className="add-to-cart flex flex-nowrap gap-2 items-center border border-gray-300 rounded p-1 hover:shadow-md transition-shadow">
+          <ShoppingCartIcon width={20} height={20} className="text-gray-400" />
+          <span className="text-sm">Add to Cart</span>
+        </button>
       </div>
     </div>
   );
