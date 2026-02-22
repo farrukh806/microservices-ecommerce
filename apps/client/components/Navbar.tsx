@@ -8,7 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import SearchBar from "./SearchBar";
-import { Bell, Home, ShoppingCart } from "lucide-react";
+import { Bell, Home } from "lucide-react";
+import Cart from "./Cart";
 
 const Navbar = () => {
   return (
@@ -34,7 +35,7 @@ const Navbar = () => {
           <Home className="w-4 h-4 text-gray-500 hover:text-gray-900" />
         </Link>
         <Bell className="w-4 h-4 text-gray-500 hover:text-gray-900" />
-        <ShoppingCart className="w-4 h-4 text-gray-500 hover:text-gray-900" />
+        <Cart />
         <SignedOut>
           <SignInButton />
         </SignedOut>

@@ -49,7 +49,7 @@ const ProductCard: React.FC<(typeof products)[0]> = (props) => {
                 key={color}
                 style={{ backgroundColor: color }}
                 onClick={() => setSelectedColor(color)}
-                className="w-5 h-5 rounded-full border border-gray-500"
+                className={`w-5 h-5 rounded-full border-2 border-white ${selectedColor === color ? "outline outline-gray-500" : ""}`}
               ></button>
             ))}
           </div>
