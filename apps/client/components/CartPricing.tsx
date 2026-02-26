@@ -1,7 +1,11 @@
 import { MoveRight } from "lucide-react";
 import React from "react";
 
-const CartPricing = () => {
+interface ICartPricing {
+  showContinueButton?: boolean;
+}
+
+const CartPricing: React.FC<ICartPricing> = ({ showContinueButton = true }) => {
   return (
     <div className="col-span-1 shadow-xl p-5 rounded-md">
       <h3 className="text-md font-semibold">Cart Details</h3>
@@ -23,10 +27,12 @@ const CartPricing = () => {
           <span className="text-sm font-semibold">Total</span>
           <span className="text-sm font-semibold">$180.00</span>
         </div>
-        <button className="flex gap-2 justify-center items-center flex-nowrap bg-black hover:bg-gray-800 text-white px-2 py-1 rounded-md">
-          <span>Continue</span>
-          <MoveRight color="white" className="w-5 h-5" />
-        </button>
+        {showContinueButton && (
+          <button className="flex gap-2 justify-center items-center flex-nowrap bg-black hover:bg-gray-800 text-white px-2 py-1 rounded-md">
+            <span>Continue</span>
+            <MoveRight color="white" className="w-5 h-5" />
+          </button>
+        )}
       </div>
     </div>
   );
