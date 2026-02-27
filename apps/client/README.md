@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Status](https://img.shields.io/badge/Status-In%20progress-yellow)
+![Next.js](https://img.shields.io/badge/Next.js-16.1.6-000000)
+![React](https://img.shields.io/badge/React-19.2.3-61DAFB)
+![License](https://img.shields.io/badge/License-TBD-lightgrey)
 
-## Getting Started
+## E‑Commerce Client (Next.js App Router)
 
-First, run the development server:
+This is the **client-side application** for an e‑commerce project built with the Next.js App Router.
+
+### Project Status
+
+- **Status**: In progress
+- **Focus**: Product browsing, category filtering, cart, and checkout UX
+
+### Tech Stack
+
+- **Framework**: Next.js (App Router, `app/` directory)
+- **Language**: TypeScript + React
+- **Styling**: Tailwind CSS + custom styles in `app/globals.css`
+- **Icons**: `lucide-react`
+
+### Implemented Features
+
+- **Product listing**: Responsive grid of products with aligned cards (`ProductList`, `ProductCard`)
+- **Product data**: Static catalog in `app/static/products.json` with categories, sizes, colors, and realistic descriptions
+- **Category filters**: Horizontal category bar (`Categories`) with query-string based filtering (`?category=...`)
+- **Product options**: Size selector and color swatches per product
+- **Cart flow**: Basic cart page and shipping address form (`app/cart/page.tsx`, `ShippingAddress.tsx`)
+
+### Running the App
+
+From `apps/client`:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Project Structure (client)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/layout.tsx` – Root layout and global configuration
+- `app/page.tsx` – Home page with hero, categories, and product grid
+- `app/cart/page.tsx` – Cart and checkout entry
+- `app/static/products.json` – Product catalog used by the UI
+- `components/ProductList.tsx` – Product grid with category filtering
+- `components/ProductCard.tsx` – Individual product card
+- `components/Categories.tsx` – Category selector
+- `components/ShippingAddress.tsx` – Shipping address form
+- `public/products/` – Product images used by the catalog
 
-## Learn More
+### Next Steps (Planned)
 
-To learn more about Next.js, take a look at the following resources:
+- Wire cart and checkout to a real backend or API
+- Add authentication and user accounts
+- Implement order history and wishlists
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
