@@ -22,7 +22,7 @@ This is the **client-side application** for an e‑commerce project built with t
 ### Implemented Features
 
 - **Product listing**: Responsive grid of products with aligned cards (`ProductList`, `ProductCard`)
-- **Product data**: Static catalog in `app/static/products.json` with categories, sizes, colors, and realistic descriptions
+- **Product data**: Static catalog in `app/static/products.ts` with categories, sizes, colors, and realistic descriptions
 - **Category filters**: Horizontal category bar (`Categories`) with query-string based filtering (`?category=...`)
 - **Product options**: Size selector and color swatches per product
 - **Cart flow**: Basic cart page and shipping address form (`app/cart/page.tsx`, `ShippingAddress.tsx`)
@@ -43,7 +43,7 @@ Then open `http://localhost:3000` in your browser.
 - `app/layout.tsx` – Root layout and global configuration
 - `app/page.tsx` – Home page with hero, categories, and product grid
 - `app/cart/page.tsx` – Cart and checkout entry
-- `app/static/products.json` – Product catalog used by the UI
+- `app/static/products.ts` – Product catalog used by the UI
 - `components/ProductList.tsx` – Product grid with category filtering
 - `components/ProductCard.tsx` – Individual product card
 - `components/Categories.tsx` – Category selector

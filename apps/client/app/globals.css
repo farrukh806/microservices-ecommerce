@@ -18,6 +18,10 @@ option {
   cursor: pointer;
 }
 
+button:disabled, select:disabled, option:disabled {
+  cursor: not-allowed;
+}
+
 .add-to-cart {
   flex-shrink: 0;
 }

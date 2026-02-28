@@ -1,18 +1,17 @@
+"use client";
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-
-interface ICartItem {
- id: string
- image: string
- name: string
- quantity: number
- size: string
- color: string
- price: number
-}
+import { useCartStore } from "../app/providers/cart-store-provider";
+import toast from "react-hot-toast";
+import { ICartItem } from "../app/types/product";
 
 const CartItem: React.FC<ICartItem> = (props) => {
+  const removeProduct = useCartStore((selector) => selector.removeProduct);
+  const handleRemoveProduct = () => {
+    removeProduct(props.id, props.size, props.color)
+    toast.success("Product removed")
+  }
   return (
     <div className="flex items-center gap-10" key={props.id}>
       <Image
@@ -31,7 +30,9 @@ const CartItem: React.FC<ICartItem> = (props) => {
         </div>
         <div className="flex items-center gap-1">
           <span className="text-gray-500 text-sm">Size:</span>
-          <span className="text-gray-500 text-sm">{props.size.toUpperCase()}</span>
+          <span className="text-gray-500 text-sm">
+            {props.size.toUpperCase()}
+          </span>
         </div>
         <div className="flex items-center gap-1">
           <span className="text-gray-500 text-sm">Color:</span>
@@ -40,7 +41,10 @@ const CartItem: React.FC<ICartItem> = (props) => {
         <h2 className="font-semibold mt-5">${props.price}</h2>
       </div>
       <div className="ms-auto align-middle">
-        <button className="btn bg-red-50 hover:bg-red-100 p-2 rounded-full w-10 h-10 flex items-center justify-center">
+        <button
+          onClick={handleRemoveProduct}
+          className="btn bg-red-50 hover:bg-red-100 p-2 rounded-full w-10 h-10 flex items-center justify-center"
+        >
           <Trash className={`text-red-500`} width={15} />
         </button>
       </div>

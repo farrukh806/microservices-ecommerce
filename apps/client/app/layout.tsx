@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ClerkProviderWrapper from "../components/ClerkProvider";
+import { CartStoreProvider } from "./providers/cart-store-provider";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,15 +30,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ClerkProviderWrapper>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
-        >
-          <div className="mx-auto p-4 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl flex flex-col flex-1 w-full">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </body>
+        <CartStoreProvider>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+          >
+            <div className="mx-auto p-4 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl flex flex-col flex-1 w-full">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+            <Toaster position="top-center" />
+          </body>
+        </CartStoreProvider>
       </ClerkProviderWrapper>
     </html>
   );

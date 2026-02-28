@@ -1,15 +1,16 @@
 import React from "react";
-import products from "../app/static/products.json";
+import products from "../app/static/products";
 import ProductCard from "./ProductCard";
+import { IProduct } from "../app/types/product";
 const ProductList: React.FC<{ activeCategory: string }> = ({
   activeCategory,
 }) => {
-  const filteredProducts =
+  const filteredProducts: IProduct[] =
     !activeCategory || activeCategory === "all"
       ? products
       : products.filter(
           (product) =>
-            product.category && product.category.includes(activeCategory)
+            product.category && product.category.includes(activeCategory),
         );
   return (
     <section className="w-full mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 product-list">

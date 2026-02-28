@@ -1,13 +1,32 @@
 "use client";
 import React, { useState } from "react";
-import products from "../app/static/products.json";
 import Image from "next/image";
 import { ShoppingCartIcon } from "lucide-react";
+import { useCartStore } from "../app/providers/cart-store-provider";
+import { IProduct } from "../app/types/product";
+import toast from "react-hot-toast";
 
-const ProductCard: React.FC<(typeof products)[0]> = (props) => {
+const ProductCard: React.FC<IProduct> = (props) => {
   const { colors, images, name, price, shortDescription, sizes } = props;
-  const [selectedColor, setSelectedColor] = useState(colors[0]);
-  const [selectedSize, setSelectedSize] = useState(sizes[0]);
+  const [selectedColor, setSelectedColor] = useState<string>(
+    colors[0] as string,
+  );
+  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] as string);
+  const addProduct = useCartStore((selector) => selector.addProduct);
+  const addProductToCart = () => {
+    addProduct({
+      name: props.name,
+      description: props.description,
+      id: props.id,
+      price: props.price,
+      quantity: 1,
+      shortDescription: props.shortDescription,
+      size: selectedSize,
+      color: selectedColor,
+      image: props.images[selectedColor] as string,
+    });
+    toast.success("Product added to cart");
+  };
   return (
     <div className="bg-white shadow-md product-card rounded">
       {typeof selectedColor === "string" && (
@@ -57,7 +76,10 @@ const ProductCard: React.FC<(typeof products)[0]> = (props) => {
       </div>
       <div className="flex justify-between p-2">
         <h2 className="font-semibold text-md">${price}</h2>
-        <button className="add-to-cart flex flex-nowrap gap-2 items-center border border-gray-300 rounded p-1 hover:shadow-md transition-shadow">
+        <button
+          onClick={addProductToCart}
+          className="add-to-cart flex flex-nowrap gap-2 items-center border border-gray-300 rounded p-1 hover:shadow-md transition-shadow"
+        >
           <ShoppingCartIcon width={20} height={20} className="text-gray-400" />
           <span className="text-sm">Add to Cart</span>
         </button>
