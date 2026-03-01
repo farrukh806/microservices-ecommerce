@@ -1,7 +1,7 @@
 import React from "react";
-import { ICartItem } from "../app/types/product";
+import { ICartItem } from "../types/product";
 import toast from "react-hot-toast";
-import { useCartStore } from "../app/providers/cart-store-provider";
+import { useCartStore } from "../providers/cart-store-provider";
 
 interface IAddToCartButton {
   product: ICartItem;

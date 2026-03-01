@@ -1,5 +1,5 @@
 "use client";
-import { useCartStore } from "../app/providers/cart-store-provider";
+import { useCartStore } from "../providers/cart-store-provider";
 import CartItem from "./CartItem";
 import CartPricing from "./CartPricing";
 

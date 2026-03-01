@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import products from "../../static/products";
+import products from "../../../static/products";
 import Image from "next/image";
 import { notFound, useParams } from "next/navigation";
-import { useCartStore } from "../../providers/cart-store-provider";
+import { useCartStore } from "../../../providers/cart-store-provider";
 import AddToCartButton from "../../../components/AddToCart";
 import QuantitySelector from "../../../components/QuantitySelector";
 import ColorSector from "../../../components/ColorSector";

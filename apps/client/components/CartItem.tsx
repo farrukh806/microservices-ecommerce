@@ -2,9 +2,9 @@
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-import { useCartStore } from "../app/providers/cart-store-provider";
+import { useCartStore } from "../providers/cart-store-provider";
 import toast from "react-hot-toast";
-import { ICartItem } from "../app/types/product";
+import { ICartItem } from "../types/product";
 
 const CartItem: React.FC<ICartItem> = (props) => {
   const removeProduct = useCartStore((selector) => selector.removeProduct);

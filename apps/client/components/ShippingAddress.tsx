@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import {
   ShippingAddress as ShippingAddressType,
   shippingAddressSchema,
-} from "../app/validations/shipping-address";
+} from "../validations/shipping-address";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle, MoveRight } from "lucide-react";
 

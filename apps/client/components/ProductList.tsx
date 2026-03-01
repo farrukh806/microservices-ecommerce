@@ -1,7 +1,7 @@
 import React from "react";
-import products from "../app/static/products";
+import products from "../static/products";
 import ProductCard from "./ProductCard";
-import { IProduct } from "../app/types/product";
+import { IProduct } from "../types/product";
 const ProductList: React.FC<{ activeCategory: string }> = ({
   activeCategory,
 }) => {

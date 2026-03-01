@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCartIcon } from "lucide-react";
-import { useCartStore } from "../app/providers/cart-store-provider";
-import { IProduct } from "../app/types/product";
+import { useCartStore } from "../providers/cart-store-provider";
+import { IProduct } from "../types/product";
 import toast from "react-hot-toast";
 
 const ProductCard: React.FC<IProduct> = (props) => {

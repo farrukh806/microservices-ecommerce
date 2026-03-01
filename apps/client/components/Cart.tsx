@@ -2,7 +2,7 @@
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { CART_STEP_NAME } from "../app/constants";
-import { useCartStore } from "../app/providers/cart-store-provider";
+import { useCartStore } from "../providers/cart-store-provider";
 
 const Cart = () => {
   const count = useCartStore((selector) => selector.products.length)

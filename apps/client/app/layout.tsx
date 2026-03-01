@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ClerkProviderWrapper from "../components/ClerkProvider";
-import { CartStoreProvider } from "./providers/cart-store-provider";
+import { CartStoreProvider } from "../providers/cart-store-provider";
 import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
