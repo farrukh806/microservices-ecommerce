@@ -33,7 +33,7 @@ export const createCartStore = (initState: CartState = defaultInitState) => {
         if (existingIndex !== -1) {
           const updatedProducts = state.products.map((p, index) =>
             index === existingIndex
-              ? { ...p, quantity: (p.quantity ?? 0) + 1 }
+              ? { ...p, quantity: (p.quantity ?? 0) + (product.quantity ?? 1) }
               : p,
           );
 
@@ -44,7 +44,7 @@ export const createCartStore = (initState: CartState = defaultInitState) => {
         return {
           products: [
             ...state.products,
-            { ...product, quantity: product.quantity ?? 1 },
+            { ...product, quantity: product.quantity ?? product.quantity ?? 1 },
           ],
         };
       }),

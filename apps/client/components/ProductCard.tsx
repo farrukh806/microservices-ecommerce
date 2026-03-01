@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ShoppingCartIcon } from "lucide-react";
 import { useCartStore } from "../app/providers/cart-store-provider";
 import { IProduct } from "../app/types/product";
@@ -13,7 +14,8 @@ const ProductCard: React.FC<IProduct> = (props) => {
   );
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0] as string);
   const addProduct = useCartStore((selector) => selector.addProduct);
-  const addProductToCart = () => {
+  const addProductToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
     addProduct({
       name: props.name,
       description: props.description,
@@ -28,7 +30,7 @@ const ProductCard: React.FC<IProduct> = (props) => {
     toast.success("Product added to cart");
   };
   return (
-    <div className="bg-white shadow-md product-card rounded">
+    <Link href={`/products/${props.id}`} className="bg-white shadow-md product-card rounded">
       {typeof selectedColor === "string" && (
         <div className="relative w-full aspect-320/430 overflow-hidden bg-gray-100">
           <Image
@@ -84,7 +86,7 @@ const ProductCard: React.FC<IProduct> = (props) => {
           <span className="text-sm">Add to Cart</span>
         </button>
       </div>
-    </div>
+    </Link>
   );
 };
 
