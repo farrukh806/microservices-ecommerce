@@ -1,10 +1,16 @@
 import Fastify from "fastify";
-const PORT = 8001
+import { clerkPlugin } from "@clerk/fastify";
+import dotenv from "dotenv";
+import { isAuthenticated } from "./middleware/auth.js";
+dotenv.config();
+const PORT = 8001;
 
 const fastify = Fastify();
 
+fastify.register(clerkPlugin);
+
 // Declare a route
-fastify.get("/", function (request, reply) {
+fastify.get("/", { preHandler: isAuthenticated }, function (request, reply) {
   reply.send({ hello: "world" });
 });
 
@@ -15,5 +21,5 @@ fastify.listen({ port: PORT }, function (err, address) {
     process.exit(1);
   }
   // Server is now listening on ${address}
-  console.log(`Order service is running on port ${address}`)
+  console.log(`Order service is running on port ${address}`);
 });
