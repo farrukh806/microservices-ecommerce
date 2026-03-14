@@ -4,13 +4,11 @@ import React from "react";
 interface IQuantitySelector {
   quantity: number;
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
-  isAlreadyAdded: boolean;
 }
 
 const QuantitySelector: React.FC<IQuantitySelector> = ({
   quantity,
   setQuantity,
-  isAlreadyAdded,
 }) => {
   return (
     <div className="mt-10">
@@ -19,7 +17,7 @@ const QuantitySelector: React.FC<IQuantitySelector> = ({
         <button
           className="px-4 py-2 border border-gray-200 disabled:opacity-50 hover:bg-gray-200"
           onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
-          disabled={quantity === 1 || isAlreadyAdded}
+          disabled={quantity === 1}
         >
           <Minus />
         </button>
@@ -27,7 +25,7 @@ const QuantitySelector: React.FC<IQuantitySelector> = ({
         <button
           className="px-4 py-2 border border-gray-200 disabled:opacity-50 hover:bg-gray-200"
           onClick={() => setQuantity(quantity + 1)}
-          disabled={quantity > 4 || isAlreadyAdded}
+          disabled={quantity > 3}
         >
           <Plus />
         </button>

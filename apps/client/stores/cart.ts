@@ -29,11 +29,11 @@ export const createCartStore = (initState: CartState = defaultInitState) => {
             p.color === product.color,
         );
 
-        // If product with same id + size + color exists → increase quantity
+        // If product with same id + size + color exists → set quantity to incoming quantity
         if (existingIndex !== -1) {
           const updatedProducts = state.products.map((p, index) =>
             index === existingIndex
-              ? { ...p, quantity: (p.quantity ?? 0) + (product.quantity ?? 1) }
+              ? { ...p, quantity: product.quantity ?? 1 }
               : p,
           );
 

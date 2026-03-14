@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import products from "../../../static/products";
 import Image from "next/image";
 import { notFound, useParams } from "next/navigation";
@@ -12,7 +12,6 @@ import SizeSelector from "../../../components/SizeSelector";
 const ProductDetails: React.FC = () => {
   const { id } = useParams();
   const product = products.find((product) => product.id === id);
-  const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>(
     product?.sizes[0] as string,
   );
@@ -24,8 +23,12 @@ const ProductDetails: React.FC = () => {
   );
 
   if (!product) return notFound();
-
-  const isAlreadyAdded = cartItems.some((item) => item.id === product.id);
+  const cartItem = cartItems.find((item) => item.id === product.id);
+  const [quantity, setQuantity] = useState(cartItem?.quantity || 1);
+  useEffect(() => {
+    if (cartItem && quantity !== cartItem.quantity)
+      setQuantity(cartItem.quantity);
+  }, [cartItem]);
   return (
     <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
       {/* image section */}
@@ -55,14 +58,9 @@ const ProductDetails: React.FC = () => {
           setSelectedColor={setSelectedColor}
         />
         {/* quantity */}
-        <QuantitySelector
-          isAlreadyAdded={isAlreadyAdded}
-          quantity={quantity}
-          setQuantity={setQuantity}
-        />
+        <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
         {/* add to cart button */}
         <AddToCartButton
-          isAlreadyAdded={isAlreadyAdded}
           product={{
             ...product,
             color: selectedColor,

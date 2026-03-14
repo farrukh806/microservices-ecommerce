@@ -1,7 +1,7 @@
 "use client";
 import { MoveRight } from "lucide-react";
 import React from "react";
-import { useCartStore } from "../app/providers/cart-store-provider";
+import { useCartStore } from "../providers/cart-store-provider";
 import { useRouter } from "next/navigation";
 import { CART_STEP_NAME } from "../app/constants";
 
