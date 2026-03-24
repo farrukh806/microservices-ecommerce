@@ -15,7 +15,8 @@
     "@clerk/express": "^2.0.4",
     "cors": "^2.8.6",
     "dotenv": "^16.0.3",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "@repo/product-db": "*"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
