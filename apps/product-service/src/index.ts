@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { clerkMiddleware } from "@clerk/express";
 import productRouter from "./routes/product.route";
 import categoryRouter from "./routes/category.route";
+import { validationErrorHandler } from "./middleware/validation";
 dotenv.config();
 
 const app = express();
@@ -16,9 +17,11 @@ app.use(
 );
 
 app.use(clerkMiddleware({ secretKey: process.env.CLERK_SECRET_KEY }));
+app.use(express.json());
 
 app.use("/products", productRouter);
 app.use("/categories", categoryRouter);
 
+app.use(validationErrorHandler);
 
 app.listen(PORT, () => console.log(`Product service running at ${PORT}`));

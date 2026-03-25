@@ -16,7 +16,8 @@
     "cors": "^2.8.6",
     "dotenv": "^16.0.3",
     "express": "^5.2.1",
-    "@repo/product-db": "*"
+    "@repo/product-db": "*",
+    "@repo/shared-schemas": "*"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",

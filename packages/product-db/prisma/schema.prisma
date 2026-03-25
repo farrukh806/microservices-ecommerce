@@ -18,18 +18,18 @@ model Product {
   shortDescription String
   description      String
   price            Float
-  size             String
-  colors           String
+  sizes            String[]
+  colors           String[]
   images           Json
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  categorySlug String
-  category Category @relation(fields: [categorySlug], references: [slug])
+  categorySlug     String
+  category         Category @relation(fields: [categorySlug], references: [slug])
 }
 
 model Category {
-  id   String @id @default(uuid())
-  name String
-  slug String @unique
+  id       String    @id @default(uuid())
+  name     String
+  slug     String    @unique
   products Product[]
 }
