@@ -1,1 +1,2 @@
-export * from "./product";
+export * from "./product.js";
+export * from "./category.js";
