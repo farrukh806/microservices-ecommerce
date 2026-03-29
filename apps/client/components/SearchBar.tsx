@@ -1,11 +1,12 @@
 import { Search } from "lucide-react";
 import React from "react";
+import { Input } from "./ui/input";
 
 const SearchBar = () => {
   return (
-    <div className="hidden sm:flex items-center gap-2 rounded-md ring-1 ring-gray-200 px-2 py-1 focus-within:shadow-md">
-      <Search className="w-4 h-4 gray-500" />
-      <input className="outline-0 text-sm" placeholder="Search..." />
+    <div className="hidden sm:flex items-center gap-2 px-2 py-1">
+      <Search className="w-4 h-4 text-gray-500" />
+      <Input className="h-8 w-[150px] lg:w-[250px]" placeholder="Search..." />
     </div>
   );
 };

@@ -1,8 +1,21 @@
 import { Prisma, prisma } from "@repo/product-db";
 import { productSchema } from "@repo/shared-schemas";
 import type { Request, Response } from "express";
+import "multer";
 
 export const productController = {
+  async uploadImages(req: Request, res: Response) {
+    if (!req.files || (Array.isArray(req.files) && req.files.length === 0)) {
+      res.status(400).json({ message: "No images provided" });
+      return;
+    }
+
+    const files = req.files as Express.Multer.File[];
+    const urls = files.map((file) => file.path);
+
+    res.status(200).json({ urls });
+  },
+
   async createProduct(req: Request, res: Response) {
     const data = productSchema.createProduct.parse(req.body);
     const product = await prisma.product.create({

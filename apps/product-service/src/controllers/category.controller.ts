@@ -15,4 +15,9 @@ export const categoryController = {
 
     res.status(201).json(category);
   },
+
+  async getCategories(req: Request, res: Response) {
+    const categories = await prisma.category.findMany();
+    res.status(200).json(categories);
+  },
 };

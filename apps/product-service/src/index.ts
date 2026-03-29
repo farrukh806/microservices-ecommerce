@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { clerkMiddleware } from "@clerk/express";
-import productRouter from "./routes/product.route";
-import categoryRouter from "./routes/category.route";
-import { validationErrorHandler } from "./middleware/validation";
+import productRouter from "./routes/product.route.js";
+import categoryRouter from "./routes/category.route.js";
+import { validationErrorHandler } from "./middleware/validation.js";
 dotenv.config();
 
 const app = express();
