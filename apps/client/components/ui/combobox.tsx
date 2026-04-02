@@ -70,7 +70,6 @@ function ComboboxInput({
           <Button
             size="sm"
             variant="ghost"
-            asChild
             disabled={disabled}
             className="h-6 w-6 p-0"
           >
