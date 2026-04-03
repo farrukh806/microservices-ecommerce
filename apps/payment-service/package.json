@@ -11,6 +11,7 @@
     "@hono/clerk-auth": "^3.1.0",
     "@hono/node-server": "^1.19.9",
     "@repo/shared-schemas": "*",
+    "@repo/product-db": "*",
     "dotenv": "^16.0.3",
     "hono": "^4.11.9"
   },
