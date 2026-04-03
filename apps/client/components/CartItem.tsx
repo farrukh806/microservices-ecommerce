@@ -8,10 +8,28 @@ import { ICartItem } from "../types/product";
 
 const CartItem: React.FC<ICartItem> = (props) => {
   const removeProduct = useCartStore((selector) => selector.removeProduct);
-  const handleRemoveProduct = () => {
-    removeProduct(props.id, props.size, props.color)
-    toast.success("Product removed")
-  }
+
+  const handleRemoveProduct = async () => {
+    try {
+      await fetch("http://localhost:8001/cart/items", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          productId: props.id,
+          size: props.size,
+          color: props.color,
+        }),
+      });
+
+      // Update local store
+      removeProduct(props.id, props.size, props.color);
+      toast.success("Product removed");
+    } catch {
+      toast.error("Failed to remove item");
+    }
+  };
+
   return (
     <div className="flex items-center gap-10" key={props.id}>
       <Image
@@ -19,7 +37,7 @@ const CartItem: React.FC<ICartItem> = (props) => {
         alt={props.name}
         width={120}
         height={80}
-        className=" self-stretch"
+        className="self-stretch"
       />
       <div className="flex flex-col gap-2">
         <h3 className="font-medium">{props.name}</h3>
@@ -45,7 +63,7 @@ const CartItem: React.FC<ICartItem> = (props) => {
           onClick={handleRemoveProduct}
           className="btn bg-red-50 hover:bg-red-100 p-2 rounded-full w-10 h-10 flex items-center justify-center"
         >
-          <Trash className={`text-red-500`} width={15} />
+          <Trash className="text-red-500" width={15} />
         </button>
       </div>
     </div>

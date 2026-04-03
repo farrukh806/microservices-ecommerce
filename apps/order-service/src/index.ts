@@ -3,6 +3,7 @@ import { clerkPlugin } from "@clerk/fastify";
 import dotenv from "dotenv";
 import { isAuthenticated } from "./middleware/auth.js";
 import orderRouter from "./routes/order.route.js";
+import cartRouter from "./routes/cart.route.js";
 import { errorHandler } from "./middleware/error.js";
 dotenv.config();
 const PORT = 8001;
@@ -18,6 +19,7 @@ fastify.get("/", { preHandler: isAuthenticated }, function (request, reply) {
 });
 
 fastify.register(orderRouter);
+fastify.register(cartRouter);
 
 // Run the server!
 fastify.listen({ port: PORT }, function (err, address) {

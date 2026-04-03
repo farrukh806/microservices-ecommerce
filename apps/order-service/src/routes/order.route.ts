@@ -1,15 +1,15 @@
-import { Router } from "fastify";
+import { FastifyPluginAsync } from "fastify";
 import { orderController } from "../controllers/order.controller.js";
 import { isAuthenticated } from "../middleware/auth.js";
 
-const router = Router({ prefix: "/orders" });
+const orderRoutes: FastifyPluginAsync = async (fastify) => {
+  // All routes require authentication
+  fastify.addHook("preHandler", isAuthenticated);
 
-// All routes require authentication
-router.addHook("preHandler", isAuthenticated);
+  fastify.post("/orders", orderController.createOrder);
+  fastify.get("/orders", orderController.getOrders);
+  fastify.get("/orders/:id", orderController.getOrderById);
+  fastify.patch("/orders/:id/status", orderController.updateOrderStatus);
+};
 
-router.post("/", orderController.createOrder);
-router.get("/", orderController.getOrders);
-router.get("/:id", orderController.getOrderById);
-router.patch("/:id/status", orderController.updateOrderStatus);
-
-export default router;
+export default orderRoutes;
