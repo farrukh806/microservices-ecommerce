@@ -2,17 +2,22 @@ import Fastify from "fastify";
 import { clerkPlugin } from "@clerk/fastify";
 import dotenv from "dotenv";
 import { isAuthenticated } from "./middleware/auth.js";
+import orderRouter from "./routes/order.route.js";
+import { errorHandler } from "./middleware/error.js";
 dotenv.config();
 const PORT = 8001;
 
 const fastify = Fastify();
 
+fastify.setErrorHandler(errorHandler);
 fastify.register(clerkPlugin);
 
 // Declare a route
 fastify.get("/", { preHandler: isAuthenticated }, function (request, reply) {
   reply.send({ hello: "world" });
 });
+
+fastify.register(orderRouter);
 
 // Run the server!
 fastify.listen({ port: PORT }, function (err, address) {
