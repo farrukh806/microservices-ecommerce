@@ -5,24 +5,18 @@ import React from "react";
 import { useCartStore } from "../providers/cart-store-provider";
 import toast from "react-hot-toast";
 import { ICartItem } from "../types/product";
+import { cartApi } from "../lib/api-client";
 
 const CartItem: React.FC<ICartItem> = (props) => {
   const removeProduct = useCartStore((selector) => selector.removeProduct);
 
   const handleRemoveProduct = async () => {
     try {
-      await fetch("http://localhost:8001/cart/items", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          productId: props.id,
-          size: props.size,
-          color: props.color,
-        }),
+      await cartApi.removeItem({
+        productId: props.id,
+        size: props.size,
+        color: props.color,
       });
-
-      // Update local store
       removeProduct(props.id, props.size, props.color);
       toast.success("Product removed");
     } catch {

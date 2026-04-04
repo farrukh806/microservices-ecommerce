@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+
+const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "http://localhost:8000";
 import { IProduct } from "../types/product";
 
 interface ProductListProps {
@@ -32,7 +34,7 @@ const ProductList: React.FC<ProductListProps> = ({ activeCategory }) => {
         if (categoryParam) params.set("category", categoryParam);
 
         const res = await fetch(
-          `http://localhost:8000/products?${params}`,
+          `${PRODUCT_SERVICE_URL}/products?${params}`,
           { credentials: "include" }
         );
         if (!res.ok) throw new Error("Failed to fetch products");

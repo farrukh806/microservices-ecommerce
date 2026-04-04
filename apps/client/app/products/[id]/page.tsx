@@ -9,6 +9,8 @@ import ColorSector from "../../../components/ColorSector";
 import SizeSelector from "../../../components/SizeSelector";
 import { IProduct } from "../../../types/product";
 
+const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "http://localhost:8000";
+
 const ProductDetails: React.FC = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<IProduct | null>(null);
@@ -21,7 +23,7 @@ const ProductDetails: React.FC = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/products/${id}`, {
+        const res = await fetch(`${PRODUCT_SERVICE_URL}/products/${id}`, {
           credentials: "include",
         });
         if (!res.ok) {
@@ -33,8 +35,8 @@ const ProductDetails: React.FC = () => {
         }
         const data: IProduct = await res.json();
         setProduct(data);
-        setSelectedSize(data.sizes[0]);
-        setSelectedColor(data.colors[0]);
+        setSelectedSize(data.sizes[0] ?? "");
+        setSelectedColor(data.colors[0] ?? "");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {

@@ -14,8 +14,7 @@ import {
   type CategoryFormValues,
 } from "../../validations";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "http://localhost:8000";
 
 type CreateCategoryProps = {
   onSuccess?: (category: { slug: string; name: string }) => void;
@@ -37,7 +36,7 @@ export default function CreateCategoryForm({ onSuccess, onCancel }: CreateCatego
     try {
       const payload = categorySchema.createCategory.parse(values);
 
-      const res = await fetch(`${API_BASE_URL}/categories`, {
+      const res = await fetch(`${PRODUCT_SERVICE_URL}/categories`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

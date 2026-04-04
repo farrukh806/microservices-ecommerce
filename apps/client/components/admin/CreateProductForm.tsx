@@ -18,8 +18,7 @@ import {
   type ProductFormValues,
 } from "../../validations";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "http://localhost:8000";
 
 function parseCommaSeparatedList(text: string): string[] {
   return text
@@ -61,7 +60,7 @@ export default function CreateProductForm() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/categories`);
+      const res = await fetch(`${PRODUCT_SERVICE_URL}/categories`);
       if (res.ok) {
         const data = await res.json();
         setCategories(data);
@@ -79,7 +78,7 @@ export default function CreateProductForm() {
     try {
       const formData = new FormData();
       Array.from(e.target.files).forEach((file) => formData.append("images", file));
-      const res = await fetch(`${API_BASE_URL}/products/upload`, {
+      const res = await fetch(`${PRODUCT_SERVICE_URL}/products/upload`, {
         method: "POST",
         body: formData,
       });
@@ -125,7 +124,7 @@ export default function CreateProductForm() {
       // Validate against the API schema
       const payload = productSchema.createProduct.parse(transformed);
 
-      const res = await fetch(`${API_BASE_URL}/products`, {
+      const res = await fetch(`${PRODUCT_SERVICE_URL}/products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

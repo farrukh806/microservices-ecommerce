@@ -3,17 +3,25 @@ import { ICartItem } from "../types/product";
 
 export type CartState = {
   products: ICartItem[];
+  hydrated: boolean;
+  isLoading: boolean;
 };
 
 export type CartActions = {
   addProduct: (product: ICartItem) => void;
   removeProduct: (productId: string, size: string, color: string) => void;
+  setProducts: (products: ICartItem[]) => void;
+  clearCart: () => void;
+  setHydrated: (hydrated: boolean) => void;
+  setLoading: (loading: boolean) => void;
 };
 
 export type CartStore = CartState & CartActions;
 
 export const defaultInitState: CartState = {
   products: [],
+  hydrated: false,
+  isLoading: false,
 };
 
 export const createCartStore = (initState: CartState = defaultInitState) => {
@@ -44,7 +52,7 @@ export const createCartStore = (initState: CartState = defaultInitState) => {
         return {
           products: [
             ...state.products,
-            { ...product, quantity: product.quantity ?? product.quantity ?? 1 },
+            { ...product, quantity: product.quantity ?? 1 },
           ],
         };
       }),
@@ -58,5 +66,13 @@ export const createCartStore = (initState: CartState = defaultInitState) => {
           ),
         };
       }),
+
+    setProducts: (products) => set({ products }),
+
+    clearCart: () => set({ products: [] }),
+
+    setHydrated: (hydrated) => set({ hydrated }),
+
+    setLoading: (isLoading) => set({ isLoading }),
   }));
 };

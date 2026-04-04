@@ -2,6 +2,48 @@ const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "http
 const ORDER_SERVICE_URL = process.env.NEXT_PUBLIC_ORDER_SERVICE_URL || "http://localhost:8001";
 const PAYMENT_SERVICE_URL = process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL || "http://localhost:8002";
 
+export const userApi = {
+  async getUsers(params?: { page?: number; size?: number; search?: string }) {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.set("page", String(params.page));
+    if (params?.size) searchParams.set("size", String(params.size));
+    if (params?.search) searchParams.set("search", params.search);
+
+    const res = await fetch(`${PRODUCT_SERVICE_URL}/users?${searchParams}`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to fetch users");
+    return res.json();
+  },
+
+  async getUser(id: string) {
+    const res = await fetch(`${PRODUCT_SERVICE_URL}/users/${id}`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to fetch user");
+    return res.json();
+  },
+
+  async updateUser(id: string, data: { firstName?: string; lastName?: string }) {
+    const res = await fetch(`${PRODUCT_SERVICE_URL}/users/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Failed to update user");
+    return res.json();
+  },
+
+  async deleteUser(id: string) {
+    const res = await fetch(`${PRODUCT_SERVICE_URL}/users/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to delete user");
+  },
+};
+
 export const productApi = {
   async getProducts(params?: {
     page?: number;

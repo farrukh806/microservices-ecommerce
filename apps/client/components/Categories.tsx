@@ -12,6 +12,8 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "http://localhost:8000";
+
 const iconMap: Record<string, (isActive: boolean) => React.ReactNode> = {
   all: (isActive) => (
     <ShoppingBag
@@ -87,7 +89,7 @@ const Categories: React.FC<{ activeCategory: string }> = ({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:8000/categories", {
+        const res = await fetch(`${PRODUCT_SERVICE_URL}/categories`, {
           credentials: "include",
         });
         if (res.ok) {
@@ -117,7 +119,7 @@ const Categories: React.FC<{ activeCategory: string }> = ({
   return (
     <section className="mt-5 bg-gray-200 flex overflow-auto justify-between p-2">
       {categories.map((category) => {
-        const iconFn = iconMap[category.slug] || iconMap.all;
+        const iconFn = iconMap[category.slug] ?? (() => null);
         return (
           <Link
             href={`?category=${category.slug}`}

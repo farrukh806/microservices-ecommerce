@@ -1,24 +1,14 @@
 import z from "zod";
 
 export const shippingAddressSchema = z.object({
-  name: z
-    .string({ error: "Name is required" })
-    .trim()
-    .min(1, { error: "Name must contain at least 1 character" }),
-
-  email: z
-    .email({ error: "Invalid email address", })
-    .trim()
-    .min(1, { error: "Email is required" }),
-  phone: z.number({ error: "Only numerical values are allowed" }).min(7),
-  address: z
-    .string({ error: "Address is required" })
-    .trim()
-    .min(1, { error: "Address must contain at least 1 character" }),
-  city: z
-    .string({ error: "City is required" })
-    .trim()
-    .min(1, { error: "City must contain at least 1 character" }),
+  firstName: z.string().trim().min(1, "First name is required"),
+  lastName: z.string().trim().min(1, "Last name is required"),
+  addressLine: z.string().trim().min(1, "Address is required"),
+  city: z.string().trim().min(1, "City is required"),
+  state: z.string().trim().min(1, "State is required"),
+  postalCode: z.string().trim().min(1, "Postal code is required"),
+  country: z.string().trim().min(1, "Country is required"),
+  phone: z.string().trim().min(1, "Phone is required"),
 });
 
 export type ShippingAddress = z.infer<typeof shippingAddressSchema>;

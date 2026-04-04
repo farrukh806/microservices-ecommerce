@@ -3,14 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import toast from "react-hot-toast";
+import { PRODUCT_SERVICE_URL } from "@/lib/config";
 
 interface Category {
   id: string;
   name: string;
   slug: string;
 }
-
-const PRODUCT_SERVICE_URL = "http://localhost:8000";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { PRODUCT_SERVICE_URL } from "@/lib/config";
 
 interface Product {
   id: string;
@@ -15,8 +16,6 @@ interface Product {
   categorySlug: string;
   createdAt: string;
 }
-
-const PRODUCT_SERVICE_URL = "http://localhost:8000";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -147,20 +146,79 @@ function ProductForm({
     images: {} as Record<string, string>,
   });
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
+  const [imageColorMap, setImageColorMap] = useState<Record<string, string>>({});
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    setUploading(true);
+    try {
+      const formDataUpload = new FormData();
+      Array.from(e.target.files).forEach((file) => formDataUpload.append("images", file));
+      const res = await fetch(`${PRODUCT_SERVICE_URL}/products/upload`, {
+        method: "POST",
+        body: formDataUpload,
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Upload failed");
+      }
+      const { urls } = await res.json();
+      setUploadedUrls((prev) => [...prev, ...(urls || [])]);
+      // Auto-map new images to colors if not already mapped
+      const colors = formData.colors.split(",").map((c) => c.trim()).filter(Boolean);
+      const newMap = { ...imageColorMap };
+      (urls || []).forEach((url: string, idx: number) => {
+        const colorIdx = uploadedUrls.length + idx;
+        const color = colors[colorIdx];
+        if (color && !newMap[color]) {
+          newMap[color] = url;
+        }
+      });
+      setImageColorMap(newMap);
+      toast.success("Images uploaded");
+    } catch (err) {
+      const errorMessage = (err as Record<string, unknown>)?.message || "Failed to upload images";
+      toast.error(errorMessage as string);
+    } finally {
+      setUploading(false);
+      // Reset input
+      e.target.value = "";
+    }
+  };
+
+  const handleColorImageChange = (color: string, imageUrl: string) => {
+    setImageColorMap((prev) => ({ ...prev, [color]: imageUrl }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
     try {
+      const colors = formData.colors.split(",").map((c) => c.trim()).filter(Boolean);
+
+      if (uploadedUrls.length === 0) {
+        toast.error("Please upload at least one image");
+        return;
+      }
+
+      // Validate all colors have an image
+      const missingColors = colors.filter((color) => !imageColorMap[color]);
+      if (missingColors.length > 0) {
+        toast.error(`Please assign images to these colors: ${missingColors.join(", ")}`);
+        return;
+      }
+
       const payload = {
         name: formData.name,
         shortDescription: formData.shortDescription,
         description: formData.description,
         price: parseFloat(formData.price),
         sizes: formData.sizes.split(",").map((s) => s.trim()).filter(Boolean),
-        colors: formData.colors.split(",").map((c) => c.trim()).filter(Boolean),
+        colors,
         categorySlug: formData.categorySlug,
-        images: formData.images,
+        images: imageColorMap,
       };
 
       const res = await fetch(`${PRODUCT_SERVICE_URL}/products`, {
@@ -263,6 +321,64 @@ function ProductForm({
               className="w-full border rounded-md px-3 py-2"
               required
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Images</label>
+            <div className="border border-dashed rounded-lg p-4 bg-gray-50">
+              <div className="flex flex-col gap-3">
+                <div>
+                  <p className="text-sm font-medium">Upload Images</p>
+                  <p className="text-xs text-gray-500">
+                    Upload images to get their URLs, then map them to colors below
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleUpload}
+                  disabled={uploading}
+                  className="text-sm file:px-3 file:py-1 file:rounded file:border-0 file:text-xs file:font-medium file:bg-gray-200 file:text-gray-900 hover:file:bg-gray-300 cursor-pointer"
+                />
+                {uploading && (
+                  <p className="text-xs text-blue-600 font-medium">Uploading...</p>
+                )}
+                {uploadedUrls.length > 0 && (
+                  <div className="flex flex-col gap-2 mt-2 pt-2 border-t">
+                    <p className="text-xs font-semibold">Map Images to Colors:</p>
+                    {formData.colors.split(",").map((c) => c.trim()).filter(Boolean).map((color) => (
+                      <div key={color} className="flex items-center gap-2">
+                        <span className="text-xs font-medium w-20 truncate" title={color}>{color}</span>
+                        <select
+                          value={imageColorMap[color] || ""}
+                          onChange={(e) => handleColorImageChange(color, e.target.value)}
+                          className="text-xs border rounded px-2 py-1 flex-1"
+                        >
+                          <option value="">Select image...</option>
+                          {uploadedUrls.map((url, i) => (
+                            <option key={i} value={url}>
+                              Image {i + 1} ({url.slice(0, 30)}...)
+                            </option>
+                          ))}
+                        </select>
+                        {imageColorMap[color] && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(imageColorMap[color]!);
+                              toast.success("Copied!");
+                            }}
+                            className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded shrink-0"
+                          >
+                            Copy
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           <div className="flex gap-3 pt-4">
             <button

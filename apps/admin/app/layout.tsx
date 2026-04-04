@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import AdminNav from "@/components/AdminNav";
+import ClerkProviderWrapper from "@/components/ClerkProvider";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -23,11 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={roboto.variable}>
       <body className="antialiased">
-        <div className="flex min-h-screen">
-          <AdminNav />
-          <main className="flex-1 p-8 bg-gray-50">{children}</main>
-        </div>
-        <Toaster position="top-center" />
+        <ClerkProviderWrapper>
+          <div className="flex min-h-screen">
+            <AdminNav />
+            <main className="flex-1 p-8 bg-gray-50">{children}</main>
+          </div>
+          <Toaster position="top-center" />
+        </ClerkProviderWrapper>
       </body>
     </html>
   );

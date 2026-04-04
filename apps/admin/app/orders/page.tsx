@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { ORDER_SERVICE_URL } from "@/lib/config";
 
 interface OrderItem {
   id: string;
@@ -25,8 +26,6 @@ interface Order {
   shippingAddress: Record<string, string>;
   userId: string;
 }
-
-const ORDER_SERVICE_URL = "http://localhost:8001";
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",

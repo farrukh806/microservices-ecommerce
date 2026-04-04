@@ -34,7 +34,9 @@ const CartPricing: React.FC<ICartPricing> = ({ showContinueButton = true }) => {
         </div>
         <div className="flex justify-between">
           <span className="text-xs text-gray-500">Shipping Fee</span>
-          <span className="text-xs font-semibold">$0.00</span>
+          <span className="text-xs font-semibold">
+            {total >= 100 ? "FREE" : "$9.99"}
+          </span>
         </div>
         <hr className="text-gray-300" />
         <div className="flex justify-between">

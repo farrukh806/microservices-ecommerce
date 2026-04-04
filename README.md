@@ -48,6 +48,15 @@ npm run dev
 
 Then open `http://localhost:3000` (or the configured port) in your browser.
 
+### Environment
+
+This repo uses the root `.env` file as the single source of truth for shared configuration values like `DATABASE_URL`.
+
+- `apps/product-service`, `apps/order-service`, and `apps/payment-service` load `../../.env` from the repo root.
+- `packages/product-db` also prefers the repo root `.env`, with `packages/product-db/.env` only used as a fallback for local Prisma tooling.
+
+Keep the root `.env` synchronized across services so migrations and runtime connections use the same database.
+
 ### High-level Roadmap
 
 - Complete cart and checkout flows

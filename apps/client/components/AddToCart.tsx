@@ -4,6 +4,7 @@ import React from "react";
 import { ICartItem } from "../types/product";
 import toast from "react-hot-toast";
 import { useCartStore } from "../providers/cart-store-provider";
+import { cartApi } from "../lib/api-client";
 
 interface IAddToCartButton {
   product: ICartItem;
@@ -14,26 +15,15 @@ const AddToCartButton: React.FC<IAddToCartButton> = ({ product }) => {
 
   const addItemToCart = async () => {
     try {
-      const res = await fetch("http://localhost:8001/cart/items", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          productId: product.id,
-          size: product.size,
-          color: product.color,
-          quantity: product.quantity,
-        }),
+      await cartApi.addItem({
+        productId: product.id,
+        size: product.size,
+        color: product.color,
+        quantity: product.quantity,
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to add item to cart");
-      }
-
-      // Also update local store for UI
       addProduct({ ...product });
       toast.success("Product added to cart");
-    } catch (error) {
+    } catch {
       toast.error("Failed to add item to cart");
     }
   };

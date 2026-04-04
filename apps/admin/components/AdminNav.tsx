@@ -10,43 +10,46 @@ import {
   Users,
   Settings,
 } from "lucide-react";
+import { SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   {
     title: "Dashboard",
-    href: "/admin",
+    href: "",
     icon: LayoutDashboard,
   },
   {
     title: "Products",
-    href: "/admin/products",
+    href: "/products",
     icon: Package,
   },
   {
     title: "Orders",
-    href: "/admin/orders",
+    href: "/orders",
     icon: ShoppingCart,
   },
   {
     title: "Categories",
-    href: "/admin/categories",
+    href: "/categories",
     icon: Layers,
   },
   {
     title: "Customers",
-    href: "/admin/customers",
+    href: "/customers",
     icon: Users,
   },
   {
     title: "Settings",
-    href: "/admin/settings",
+    href: "/settings",
     icon: Settings,
   },
 ];
 
 export default function AdminNav() {
   const pathname = usePathname();
+  const { isSignedIn, user } = useUser();
 
   return (
     <aside className="w-64 bg-gray-900 text-white min-h-screen p-4 flex flex-col">
@@ -75,6 +78,28 @@ export default function AdminNav() {
           );
         })}
       </nav>
+      
+      {/* Auth Section */}
+      <div className="border-t border-gray-700 pt-4 mt-4">
+        {isSignedIn ? (
+          <div className="flex items-center justify-between px-4">
+            <div className="flex items-center gap-2 overflow-hidden">
+              <UserButton afterSignOutUrl="/" />
+              <span className="text-sm truncate">
+                {user?.fullName || user?.emailAddresses?.[0]?.emailAddress}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="px-4">
+            <SignInButton mode="modal">
+              <button className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors">
+                Sign In
+              </button>
+            </SignInButton>
+          </div>
+        )}
+      </div>
     </aside>
   );
 }
