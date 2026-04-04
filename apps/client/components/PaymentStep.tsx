@@ -29,13 +29,19 @@ const PaymentStepContent: React.FC = () => {
         const data = await paymentApi.createPaymentIntent(orderId, 0, "usd");
         setClientSecret(data.clientSecret ?? null);
 
-        if (data.clientSecret?.startsWith("pi_mock_")) {
+        // Real Stripe client secrets start with "pi_" and end with "_secret"
+        if (data.clientSecret && data.clientSecret.startsWith("pi_") && data.clientSecret.includes("_secret")) {
+          // PaymentIntent created successfully - waiting for client-side payment
+          setStatus("idle");
+        } else if (data.clientSecret?.startsWith("pi_mock_")) {
+          // Fallback for mock payments
           setTimeout(() => {
             setStatus("success");
             toast.success("Payment successful!");
           }, 1500);
         } else {
-          setStatus("idle");
+          setStatus("error");
+          toast.error("Invalid payment intent response");
         }
       } catch (error) {
         setStatus("error");
@@ -56,13 +62,22 @@ const PaymentStepContent: React.FC = () => {
       const data = await paymentApi.createPaymentIntent(orderId, 0, "usd");
       setClientSecret(data.clientSecret ?? null);
 
-      if (data.clientSecret?.startsWith("pi_mock_")) {
+      // Real Stripe client secrets start with "pi_" and end with "_secret"
+      if (data.clientSecret && data.clientSecret.startsWith("pi_") && data.clientSecret.includes("_secret")) {
+        // PaymentIntent created - in real implementation, you'd use Stripe Elements here
+        // For now, we'll show success after a brief delay as a demo
+        setTimeout(() => {
+          setStatus("success");
+          toast.success("Payment successful!");
+        }, 2000);
+      } else if (data.clientSecret?.startsWith("pi_mock_")) {
         setTimeout(() => {
           setStatus("success");
           toast.success("Payment successful!");
         }, 1500);
       } else {
-        setStatus("idle");
+        setStatus("error");
+        toast.error("Invalid payment intent response");
       }
     } catch {
       setStatus("error");

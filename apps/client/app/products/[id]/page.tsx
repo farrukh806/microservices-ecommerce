@@ -19,6 +19,20 @@ const ProductDetails: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const { products: cartItems } = useCartStore((selector) => selector);
+  const [quantity, setQuantity] = useState(1);
+
+  const cartItem = cartItems.find(
+    (item) =>
+      item.id === product?.id &&
+      item.size === selectedSize &&
+      item.color === selectedColor,
+  );
+
+  useEffect(() => {
+    if (cartItem && quantity !== cartItem.quantity) {
+      setQuantity(cartItem.quantity);
+    }
+  }, [cartItem]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -69,19 +83,7 @@ const ProductDetails: React.FC = () => {
     );
   }
 
-  const cartItem = cartItems.find(
-    (item) =>
-      item.id === product.id &&
-      item.size === selectedSize &&
-      item.color === selectedColor,
-  );
-  const [quantity, setQuantity] = useState(cartItem?.quantity || 1);
-
-  useEffect(() => {
-    if (cartItem && quantity !== cartItem.quantity) {
-      setQuantity(cartItem.quantity);
-    }
-  }, [cartItem]);
+  
 
   const imageUrl = product.images[selectedColor] || Object.values(product.images)[0];
 

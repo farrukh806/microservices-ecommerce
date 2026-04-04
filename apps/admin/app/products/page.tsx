@@ -9,6 +9,7 @@ interface Product {
   id: string;
   name: string;
   shortDescription: string;
+  description: string;
   price: number;
   sizes: string[];
   colors: string[];
@@ -21,6 +22,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -74,7 +76,16 @@ export default function ProductsPage() {
         </button>
       </div>
 
-      {showForm && <ProductForm onClose={() => setShowForm(false)} onSuccess={fetchProducts} />}
+      {showForm && (
+        <ProductForm
+          editingProduct={editingProduct}
+          onClose={() => {
+            setShowForm(false);
+            setEditingProduct(null);
+          }}
+          onSuccess={fetchProducts}
+        />
+      )}
 
       {loading ? (
         <div className="text-center py-10">Loading...</div>
@@ -104,7 +115,13 @@ export default function ProductsPage() {
                   <td className="px-6 py-4 text-sm">{product.colors.join(", ")}</td>
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
-                      <button className="p-2 hover:bg-gray-100 rounded">
+                      <button
+                        onClick={() => {
+                          setEditingProduct(product);
+                          setShowForm(true);
+                        }}
+                        className="p-2 hover:bg-gray-100 rounded"
+                      >
                         <Pencil className="w-4 h-4" />
                       </button>
                       <button
@@ -129,26 +146,57 @@ export default function ProductsPage() {
 }
 
 function ProductForm({
+  editingProduct,
   onClose,
   onSuccess,
 }: {
+  editingProduct: Product | null;
   onClose: () => void;
   onSuccess: () => void;
 }) {
+  const isEditing = !!editingProduct;
   const [formData, setFormData] = useState({
-    name: "",
-    shortDescription: "",
-    description: "",
-    price: "",
-    sizes: "",
-    colors: "",
-    categorySlug: "",
-    images: {} as Record<string, string>,
+    name: editingProduct?.name || "",
+    shortDescription: editingProduct?.shortDescription || "",
+    description: editingProduct?.description || "",
+    price: editingProduct?.price?.toString() || "",
+    sizes: editingProduct?.sizes.join(", ") || "",
+    colors: editingProduct?.colors.join(", ") || "",
+    categorySlug: editingProduct?.categorySlug || "",
+    images: editingProduct?.images || ({} as Record<string, string>),
   });
+  const [categories, setCategories] = useState<{slug: string; name: string}[]>([]);
+  const [uploadedUrls, setUploadedUrls] = useState<string[]>(
+    editingProduct ? Object.values(editingProduct.images) : []
+  );
+  const [imageColorMap, setImageColorMap] = useState<Record<string, string>>(
+    editingProduct?.images || {}
+  );
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
-  const [imageColorMap, setImageColorMap] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (editingProduct) {
+      setUploadedUrls(Object.values(editingProduct.images));
+      setImageColorMap(editingProduct.images);
+    }
+  }, [editingProduct]);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch(`${PRODUCT_SERVICE_URL}/categories`);
+      if (res.ok) {
+        const data = await res.json();
+        setCategories(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
@@ -221,19 +269,24 @@ function ProductForm({
         images: imageColorMap,
       };
 
-      const res = await fetch(`${PRODUCT_SERVICE_URL}/products`, {
-        method: "POST",
+      const url = isEditing
+        ? `${PRODUCT_SERVICE_URL}/products/${editingProduct.id}`
+        : `${PRODUCT_SERVICE_URL}/products`;
+      const method = isEditing ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
-        toast.success("Product created");
+        toast.success(isEditing ? "Product updated" : "Product created");
         onSuccess();
         onClose();
       } else {
-        toast.error("Failed to create product");
+        toast.error(`Failed to ${isEditing ? "update" : "create"} product`);
       }
     } catch {
       toast.error("Failed to create product");
@@ -245,7 +298,7 @@ function ProductForm({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4">Add Product</h2>
+        <h2 className="text-xl font-bold mb-4">{isEditing ? "Edit Product" : "Add Product"}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Name</label>
@@ -290,14 +343,20 @@ function ProductForm({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Category Slug</label>
-              <input
-                type="text"
+              <label className="block text-sm font-medium mb-1">Category</label>
+              <select
                 value={formData.categorySlug}
                 onChange={(e) => setFormData({ ...formData, categorySlug: e.target.value })}
                 className="w-full border rounded-md px-3 py-2"
                 required
-              />
+              >
+                <option value="">Select a category</option>
+                {categories.map((cat) => (
+                  <option key={cat.slug} value={cat.slug}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div>
@@ -386,7 +445,7 @@ function ProductForm({
               disabled={submitting}
               className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 disabled:opacity-50"
             >
-              {submitting ? "Creating..." : "Create Product"}
+              {submitting ? (isEditing ? "Updating..." : "Creating...") : (isEditing ? "Update Product" : "Create Product")}
             </button>
             <button
               type="button"

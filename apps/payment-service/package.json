@@ -10,10 +10,11 @@
   "dependencies": {
     "@hono/clerk-auth": "^3.1.0",
     "@hono/node-server": "^1.19.9",
-    "@repo/shared-schemas": "*",
     "@repo/product-db": "*",
+    "@repo/shared-schemas": "*",
     "dotenv": "^16.0.3",
-    "hono": "^4.11.9"
+    "hono": "^4.11.9",
+    "stripe": "^22.0.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",

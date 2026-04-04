@@ -15,9 +15,10 @@
     "@repo/typescript-config": "*"
   },
   "dependencies": {
-    "@repo/shared-schemas": "*",
-    "@repo/product-db": "*",
     "@clerk/fastify": "^3.1.2",
+    "@fastify/cors": "^11.2.0",
+    "@repo/product-db": "*",
+    "@repo/shared-schemas": "*",
     "dotenv": "^16.0.3",
     "fastify": "^5.7.4"
   }

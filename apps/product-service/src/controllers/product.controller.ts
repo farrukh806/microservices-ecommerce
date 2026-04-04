@@ -106,7 +106,7 @@ export const productController = {
 
   async updateProduct(req: Request, res: Response) {
     const { id } = req.params;
-    const data = productSchema.createProduct.partial().parse(req.body);
+    const data = productSchema.updateProduct.parse(req.body);
 
     try {
       const product = await prisma.product.update({
