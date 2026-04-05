@@ -15,10 +15,13 @@
     "@repo/typescript-config": "*"
   },
   "dependencies": {
+    "@clerk/express": "^2.0.8",
     "@clerk/fastify": "^3.1.2",
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.2.0",
     "@repo/product-db": "*",
     "@repo/shared-schemas": "*",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.0.3",
     "fastify": "^5.7.4"
   }

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import { Toaster } from "react-hot-toast";
-import AdminNav from "@/components/AdminNav";
 import ClerkProviderWrapper from "@/components/ClerkProvider";
 import { ReactNode } from "react";
-import "./globals.css";
+import "../globals.css";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
@@ -13,26 +12,20 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Admin Panel",
-  description: "E-commerce admin panel",
+  title: "Sign In - Admin Panel",
+  description: "Sign in to your admin account",
 };
 
-export default function RootLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
-  // Check if we're on auth pages
-  const isAuthPage = false; // This will be checked client-side per segment
-  
   return (
     <html lang="en" className={roboto.variable}>
       <body className="antialiased">
         <ClerkProviderWrapper>
-          <div className="flex min-h-screen">
-            <AdminNav />
-            <main className="flex-1 p-8 bg-gray-50">{children}</main>
-          </div>
+          {children}
           <Toaster position="top-center" />
         </ClerkProviderWrapper>
       </body>

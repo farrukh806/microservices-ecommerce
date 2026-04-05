@@ -16,7 +16,7 @@ export const cartController = {
         },
       },
     });
-
+    console.log("Cart", cart)
     // Create cart if doesn't exist
     if (!cart) {
       cart = await prisma.cart.create({

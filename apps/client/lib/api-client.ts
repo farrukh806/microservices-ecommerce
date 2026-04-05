@@ -184,7 +184,7 @@ export const cartApi = {
 
 export const orderApi = {
   async createOrder(data: { shippingAddress: unknown; paymentMethod?: string }) {
-    const res = await fetch(`${ORDER_SERVICE_URL}/orders`, {
+    const res = await fetch(`${ORDER_SERVICE_URL}/order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -200,7 +200,7 @@ export const orderApi = {
     if (params?.size) searchParams.set("size", String(params.size));
     if (params?.status) searchParams.set("status", params.status);
 
-    const res = await fetch(`${ORDER_SERVICE_URL}/orders?${searchParams}`, {
+    const res = await fetch(`${ORDER_SERVICE_URL}/order?${searchParams}`, {
       credentials: "include",
     });
     if (!res.ok) throw new Error("Failed to fetch orders");
@@ -208,7 +208,7 @@ export const orderApi = {
   },
 
   async getOrder(id: string) {
-    const res = await fetch(`${ORDER_SERVICE_URL}/orders/${id}`, {
+    const res = await fetch(`${ORDER_SERVICE_URL}/order/${id}`, {
       credentials: "include",
     });
     if (!res.ok) throw new Error("Failed to fetch order");

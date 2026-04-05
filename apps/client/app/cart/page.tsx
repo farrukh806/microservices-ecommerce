@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import CartStepper from "../../components/CartStepper";
 import CartDetails from "../../components/CartDetails";
 import { CART_STEP_NAME, CART_STEPS } from "../constants";
@@ -15,11 +16,9 @@ const cartStepComponents = {
   [CART_STEP_NAME.PAYMENT]: <PaymentStep />,
 };
 
-const CartPage: React.FC<{
-  searchParams: Promise<{ step: string; orderId?: string }>;
-}> = async ({ searchParams }) => {
-  const params = await searchParams;
-  const step = params.step ?? "shopping-cart";
+const CartPage: React.FC = () => {
+  const searchParams = useSearchParams();
+  const step = searchParams.get("step") ?? "shopping-cart";
   const Component =
     cartStepComponents[step as keyof typeof cartStepComponents] ??
     cartStepComponents[CART_STEP_NAME.SHOPPING_CART];

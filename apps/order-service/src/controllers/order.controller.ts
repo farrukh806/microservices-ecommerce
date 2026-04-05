@@ -4,6 +4,7 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 
 export const orderController = {
   async createOrder(request: FastifyRequest, reply: FastifyReply) {
+    console.log("Creating order with body:", request.body);
     const userId = request.userId!;
     const { shippingAddress, paymentMethod } = orderSchema.createOrder.parse(
       request.body,
@@ -15,6 +16,7 @@ export const orderController = {
       include: { items: true },
     });
 
+    console.log("cart", cart)
     if (!cart || cart.items.length === 0) {
       return reply.status(400).send({ message: "Cart is empty" });
     }

@@ -13,7 +13,7 @@
     "@repo/product-db": "*",
     "@repo/shared-schemas": "*",
     "dotenv": "^16.0.3",
-    "hono": "^4.11.9",
+    "hono": "^4.12.10",
     "stripe": "^22.0.0"
   },
   "devDependencies": {

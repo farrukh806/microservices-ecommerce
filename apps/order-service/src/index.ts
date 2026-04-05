@@ -4,8 +4,8 @@ dotenv.config(path.resolve(__dirname, "../../.env"));
 
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import cookieParser from "@fastify/cookie";
 import { clerkPlugin } from "@clerk/fastify";
-import { isAuthenticated } from "./middleware/auth.js";
 import orderRouter from "./routes/order.route.js";
 import cartRouter from "./routes/cart.route.js";
 import { errorHandler } from "./middleware/error.js";
@@ -24,22 +24,23 @@ if (!clerkSecretKey || !clerkPublishableKey) {
 const fastify = Fastify();
 
 await fastify.register(cors, {
-  origin: true,
+  origin: ["http://localhost:3000", "http://localhost:3001"],
   credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 });
 
 fastify.setErrorHandler(errorHandler);
 
+// Register Clerk plugin first
 fastify.register(clerkPlugin, {
   secretKey: clerkSecretKey,
   publishableKey: clerkPublishableKey,
 });
 
-// Declare a route
-fastify.get("/", { preHandler: isAuthenticated }, function (request, reply) {
-  reply.send({ hello: "world" });
-});
+// Then register cookie parser
+await fastify.register(cookieParser);
 
+console.log("Clerk keys loaded successfully");
 fastify.register(orderRouter);
 fastify.register(cartRouter);
 

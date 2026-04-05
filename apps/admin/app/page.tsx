@@ -1,5 +1,5 @@
-"use client";
-
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { Package, ShoppingCart, DollarSign, Users } from "lucide-react";
 
 const stats = [
@@ -9,7 +9,13 @@ const stats = [
   { title: "Customers", value: "456", icon: Users, change: "+8%" },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    redirect("/sign-in");
+  }
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>

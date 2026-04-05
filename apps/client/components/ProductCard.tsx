@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCartIcon } from "lucide-react";
 import { useCartStore } from "../providers/cart-store-provider";
+import { cartApi } from "../lib/api-client";
 import { IProduct } from "../types/product";
 import toast from "react-hot-toast";
 
@@ -14,21 +15,31 @@ const ProductCard: React.FC<IProduct> = (props) => {
   );
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0] as string);
   const addProduct = useCartStore((selector) => selector.addProduct);
-  const addProductToCart = (e: React.MouseEvent) => {
+  const addProductToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addProduct({
-      name: props.name,
-      description: props.description,
-      id: props.id,
-      price: props.price,
-      quantity: 1,
-      shortDescription: props.shortDescription,
-      size: selectedSize,
-      color: selectedColor,
-      image: props.images[selectedColor] as string,
-    });
-    toast.success("Product added to cart");
+    try {
+      await cartApi.addItem({
+        productId: props.id,
+        size: selectedSize,
+        color: selectedColor,
+        quantity: 1,
+      });
+      addProduct({
+        name: props.name,
+        description: props.description,
+        id: props.id,
+        price: props.price,
+        quantity: 1,
+        shortDescription: props.shortDescription,
+        size: selectedSize,
+        color: selectedColor,
+        image: props.images[selectedColor] as string,
+      });
+      toast.success("Product added to cart");
+    } catch {
+      toast.error("Failed to add item to cart");
+    }
   };
   const productUrl = `/products/${props.id}`;
 

@@ -6,10 +6,11 @@ const orderRoutes: FastifyPluginAsync = async (fastify) => {
   // All routes require authentication
   fastify.addHook("preHandler", isAuthenticated);
 
-  fastify.post("/orders", orderController.createOrder);
-  fastify.get("/orders", orderController.getOrders);
-  fastify.get("/orders/:id", orderController.getOrderById);
-  fastify.patch("/orders/:id/status", orderController.updateOrderStatus);
+  fastify.post("/order", orderController.createOrder);
+  fastify.get("/order", orderController.getOrders);
+  fastify.get("/orders", orderController.getOrders); // Alias for /order
+  fastify.get("/order/:id", orderController.getOrderById);
+  fastify.patch("/order/:id/status", orderController.updateOrderStatus);
 };
 
 export default orderRoutes;

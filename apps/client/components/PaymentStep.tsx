@@ -3,7 +3,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { LoaderCircle, CheckCircle, CreditCard, RotateCcw } from "lucide-react";
 import { Button } from "./ui/button";
-import { paymentApi } from "../lib/api-client";
+import { paymentApi, orderApi } from "../lib/api-client";
 import toast from "react-hot-toast";
 
 type PaymentStatus = "idle" | "processing" | "success" | "error";
@@ -15,6 +15,7 @@ const PaymentStepContent: React.FC = () => {
 
   const [status, setStatus] = useState<PaymentStatus>("idle");
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [orderTotal, setOrderTotal] = useState<number>(0);
 
   useEffect(() => {
     if (!orderId) {
@@ -26,7 +27,12 @@ const PaymentStepContent: React.FC = () => {
     const initPayment = async () => {
       setStatus("processing");
       try {
-        const data = await paymentApi.createPaymentIntent(orderId, 0, "usd");
+        // Fetch order to get the total
+        const order = await orderApi.getOrder(orderId);
+        const total = order.total;
+        setOrderTotal(total);
+
+        const data = await paymentApi.createPaymentIntent(orderId, total, "usd");
         setClientSecret(data.clientSecret ?? null);
 
         // Real Stripe client secrets start with "pi_" and end with "_secret"
@@ -59,7 +65,7 @@ const PaymentStepContent: React.FC = () => {
 
     setStatus("processing");
     try {
-      const data = await paymentApi.createPaymentIntent(orderId, 0, "usd");
+      const data = await paymentApi.createPaymentIntent(orderId, orderTotal, "usd");
       setClientSecret(data.clientSecret ?? null);
 
       // Real Stripe client secrets start with "pi_" and end with "_secret"
@@ -137,9 +143,9 @@ const PaymentStepContent: React.FC = () => {
           <div className="flex flex-col items-center justify-center py-16 gap-6">
             <CreditCard className="w-12 h-12 text-gray-400" />
             <p className="text-gray-600">
-              Ready to complete your payment of{" "}
+              Ready to complete your payment of ${orderTotal.toFixed(2)}{" "}
               <span className="font-semibold">
-                {clientSecret ? `Order #${orderId?.slice(0, 8)}` : "your order"}
+                ${orderTotal.toFixed(2)}
               </span>
             </p>
             <Button onClick={handlePayNow} className="px-8">
@@ -155,6 +161,10 @@ const PaymentStepContent: React.FC = () => {
           <div className="flex justify-between">
             <span className="text-gray-500">Order ID</span>
             <span className="font-mono text-xs">{orderId?.slice(0, 8)}...</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-500">Total</span>
+            <span className="font-semibold">${orderTotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-500">Payment</span>

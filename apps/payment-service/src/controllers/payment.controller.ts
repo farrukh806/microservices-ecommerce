@@ -14,7 +14,7 @@ export const paymentController = {
     // Verify the order belongs to this user
     const order = await prisma.order.findUnique({
       where: { id: orderId },
-      include: { payment: true, items: { include: { product: true } } },
+      include: { payment: true, items: true },
     });
 
     if (!order) {

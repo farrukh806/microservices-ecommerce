@@ -64,7 +64,7 @@ export default function OrdersPage() {
 
   const updateStatus = async (orderId: string, status: string) => {
     try {
-      const res = await fetch(`${ORDER_SERVICE_URL}/orders/${orderId}/status`, {
+      const res = await fetch(`${ORDER_SERVICE_URL}/order/${orderId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -3,15 +3,13 @@ import { cartController } from "../controllers/cart.controller.js";
 import { isAuthenticated } from "../middleware/auth.js";
 
 const cartRoute: FastifyPluginAsync = async (fastify) => {
-  fastify.register(async (instance) => {
-	instance.addHook("preHandler", isAuthenticated);
+  fastify.addHook("preHandler", isAuthenticated);
 
-	instance.get("/cart", cartController.getCart);
-	instance.post("/cart/items", cartController.addItem);
-	instance.patch("/cart/items", cartController.updateItem);
-	instance.delete("/cart/items", cartController.removeItem);
-	instance.delete("/cart", cartController.clearCart);
-  });
+  fastify.get("/cart", cartController.getCart);
+  fastify.post("/cart/items", cartController.addItem);
+  fastify.patch("/cart/items", cartController.updateItem);
+  fastify.delete("/cart/items", cartController.removeItem);
+  fastify.delete("/cart", cartController.clearCart);
 };
 
 export default cartRoute;
