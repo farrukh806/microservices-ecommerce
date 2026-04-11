@@ -1,33 +1,66 @@
-![Status](https://img.shields.io/badge/Status-In%20progress-yellow)
-![Apps](https://img.shields.io/badge/Apps-client-blue)
+![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
+![Apps](https://img.shields.io/badge/Apps-client%2Cadmin-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-16.1.6-000000)
 ![React](https://img.shields.io/badge/React-19.2.3-61DAFB)
 ![License](https://img.shields.io/badge/License-TBD-lightgrey)
 
 ## E‑Commerce Monorepo
 
-This repository is a **Turborepo-based monorepo** for an e‑commerce application. The primary app currently under development is the Next.js client in `apps/client`.
+This repository is a **Turborepo-based monorepo** for a modular e-commerce platform built with Next.js, React, and TypeScript.
 
-### Project Status
+### What’s included
 
-- **Status**: In progress
-- **Current focus**: Building the storefront UI (product grid, filters, cart, checkout UX)
-
-### Apps and Packages
-
-- **`apps/client`** – Next.js (App Router) storefront for browsing products, filtering by category, and managing the cart
-- **`@repo/eslint-config`** – Shared ESLint configuration
-- **`@repo/typescript-config`** – Shared TypeScript configuration
+- **`apps/client`** – Customer storefront for browsing products, filters, wishlist, cart, checkout, and reviews.
+- **`apps/admin`** – Admin dashboard for managing products, orders, inventory, coupons, reviews, customers, and settings.
+- **`apps/order-service`** – Order and cart service with coupon, review, and wishlist APIs.
+- **`apps/product-service`** – Product management service with image upload support.
+- **`apps/payment-service`** – Payment service with Stripe integration.
+- **`apps/email-service`** – Email delivery service for notifications.
+- **`packages/product-db`** – Shared Prisma database layer.
+- **`packages/shared-schemas`** – Shared TypeScript schemas across apps and services.
+- **`packages/eslint-config`** – Shared ESLint configuration.
+- **`packages/typescript-config`** – Shared TypeScript compiler settings.
 
 All apps and packages use **TypeScript**.
+
+### Features
+
+#### Storefront (`apps/client`)
+
+- Product listing and detail pages
+- Category filtering and enhanced search UI
+- Add-to-cart flow with quantity selection
+- Cart summary, pricing breakdown, and checkout flow
+- Wishlist support
+- Coupon code input and validation
+- Product reviews and star rating components
+- Auth-ready architecture using `@clerk/nextjs`
+
+#### Admin dashboard (`apps/admin`)
+
+- Product and category management
+- Order and customer management
+- Inventory view and low-stock alerts
+- Coupon management
+- Review moderation
+- Settings and admin navigation UI
+- Protected admin experience with `@clerk/nextjs`
+
+#### Backend services
+
+- **`apps/order-service`**: cart, orders, coupons, reviews, wishlist APIs, and Clerk auth integration
+- **`apps/product-service`**: product creation, product routes, image upload, and catalog management
+- **`apps/payment-service`**: Stripe-powered payment processing
+- **`apps/email-service`**: transactional email delivery via Resend
 
 ### Tech Stack
 
 - **Monorepo tooling**: Turborepo
-- **Frontend**: Next.js 16.1.6 (App Router) + React 19.2.3
-- **Styling**: Tailwind CSS 4 + custom CSS
+- **Frontend**: Next.js 16.1.6 + React 19.2.3
+- **Styling**: Tailwind CSS 4 + shadcn/ui patterns
 - **Forms & validation**: `react-hook-form`, `zod`
-- **Auth** (planned/partial): `@clerk/nextjs`
+- **Auth**: `@clerk/nextjs`
+- **Backend**: Fastify, Express, Hono, Stripe, Resend
 
 ### Development
 
@@ -35,10 +68,10 @@ From the repo root:
 
 ```bash
 npm install
-npx turbo dev --filter=client
+npm run dev
 ```
 
-Or inside `apps/client`:
+Or launch an individual app:
 
 ```bash
 cd apps/client
@@ -46,19 +79,48 @@ npm install
 npm run dev
 ```
 
-Then open `http://localhost:3000` (or the configured port) in your browser.
+```bash
+cd apps/admin
+npm install
+npm run dev
+```
+
+```bash
+cd apps/order-service
+npm install
+npm run dev
+```
+
+```bash
+cd apps/product-service
+npm install
+npm run dev
+```
+
+```bash
+cd apps/payment-service
+npm install
+npm run dev
+```
+
+```bash
+cd apps/email-service
+npm install
+npm run dev
+```
 
 ### Environment
 
-This repo uses the root `.env` file as the single source of truth for shared configuration values like `DATABASE_URL`.
+This repo uses the root `.env` file as the shared configuration source.
 
 - `apps/product-service`, `apps/order-service`, and `apps/payment-service` load `../../.env` from the repo root.
-- `packages/product-db` also prefers the repo root `.env`, with `packages/product-db/.env` only used as a fallback for local Prisma tooling.
+- `packages/product-db` also prefers the repo root `.env`, with `packages/product-db/.env` used only as a local fallback.
 
-Keep the root `.env` synchronized across services so migrations and runtime connections use the same database.
+Keep the root `.env` synchronized across services so migrations and runtime connections remain aligned.
 
 ### High-level Roadmap
 
-- Complete cart and checkout flows
-- Integrate authentication and user accounts
-- Connect to a real product/catalog and orders backend
+- Complete checkout and payment flows
+- Finish auth and account management
+- Connect all services to a live database and payment provider
+- Expand admin capabilities for product and order workflows
