@@ -44,25 +44,25 @@ const ProductCard: React.FC<IProduct> = (props) => {
   const productUrl = `/products/${props.id}`;
 
   return (
-    <div className="bg-white shadow-md product-card rounded">
+    <div className="bg-transparent border border-black product-card rounded-none hover:border-gray-800 transition-colors group">
       <Link href={productUrl} className="block">
         {typeof selectedColor === "string" && (
-          <div className="relative w-full aspect-320/430 overflow-hidden bg-gray-100">
+          <div className="relative w-full aspect-320/430 overflow-hidden bg-gray-100 border-b border-black">
             <Image
               src={images[selectedColor as keyof typeof images] as string}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover"
+              className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
               alt={name}
             />
           </div>
         )}
-        <h3 className="px-2">{name}</h3>
-        <p className="text-gray-500 tracking-tight text-sm px-2">
+        <h3 className="px-3 pt-3 font-heading font-bold text-lg uppercase tracking-wide">{name}</h3>
+        <p className="text-gray-600 tracking-wide text-sm px-3 pb-3">
           {props.shortDescription}
         </p>
       </Link>
-      <div className="flex gap-5 p-2">
+      <div className="flex gap-5 px-3 pb-3">
         <div className="flex flex-col">
           <span className="text-xs text-gray-400">Size</span>
           <select
@@ -93,17 +93,17 @@ const ProductCard: React.FC<IProduct> = (props) => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between p-2">
-        <Link href={productUrl} className="font-semibold text-md self-center">
+      <div className="flex justify-between border-t border-black mt-auto">
+        <Link href={productUrl} className="font-heading font-bold text-lg self-center px-4 w-1/3">
           ${price}
         </Link>
         <button
           type="button"
           onClick={addProductToCart}
-          className="add-to-cart flex flex-nowrap gap-2 items-center border border-gray-300 rounded p-1 hover:shadow-md transition-shadow"
+          className="add-to-cart flex flex-1 justify-center gap-2 items-center bg-black text-white hover:bg-gray-900 transition-colors px-4 py-3 uppercase text-xs tracking-widest font-semibold border-l border-black"
         >
-          <ShoppingCartIcon width={20} height={20} className="text-gray-400" />
-          <span className="text-sm">Add to Cart</span>
+          <ShoppingCartIcon width={16} height={16} className="text-white" />
+          <span>Add to Cart</span>
         </button>
       </div>
     </div>

@@ -108,30 +108,30 @@ const Categories: React.FC<{ activeCategory: string }> = ({
 
   if (loading) {
     return (
-      <section className="mt-5 bg-gray-200 flex overflow-auto justify-between p-2">
+      <section className="mt-8 flex overflow-auto gap-4 p-2 border-b border-black pb-4 mb-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="animate-pulse bg-gray-300 h-8 w-20 rounded" />
+          <div key={i} className="animate-pulse bg-gray-200 h-8 w-24 border border-gray-200" />
         ))}
       </section>
     );
   }
 
   return (
-    <section className="mt-5 bg-gray-200 flex overflow-auto justify-between p-2">
+    <section className="mt-8 flex overflow-auto gap-4 p-2 border-b border-black pb-4 mb-4">
       {categories.map((category) => {
         const iconFn = iconMap[category.slug] ?? (() => null);
         return (
           <Link
             href={`?category=${category.slug}`}
-            className={`flex shrink-0 items-center px-2 ${
+            className={`flex shrink-0 items-center px-4 py-2 text-xs uppercase tracking-widest font-semibold transition-all ${
               activeCategory === category.slug
-                ? "bg-white rounded text-black"
-                : "text-gray-500"
+                ? "border border-black text-black"
+                : "border border-transparent text-gray-500 hover:text-black"
             }`}
             key={category.slug}
           >
             {iconFn(activeCategory === category.slug)}
-            <span className="ms-1">{category.name}</span>
+            <span className="ms-2">{category.name}</span>
           </Link>
         );
       })}

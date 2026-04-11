@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Inter, Syne } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -7,9 +7,13 @@ import ClerkProviderWrapper from "../components/ClerkProvider";
 import { CartStoreProvider } from "../providers/cart-store-provider";
 import { Toaster } from "react-hot-toast";
 
-const roboto = Roboto({
-  weight: ["400", "500", "700"],
-  variable: "--font-roboto",
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
 });
 
@@ -28,7 +32,7 @@ export default function RootLayout({
       <ClerkProviderWrapper>
         <CartStoreProvider>
           <body
-            className={`${roboto.variable} antialiased min-h-screen flex flex-col`}
+            className={`${inter.variable} ${syne.variable} antialiased min-h-screen flex flex-col`}
           >
             <div className="mx-auto p-4 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl flex flex-col flex-1 w-full">
               <Navbar />

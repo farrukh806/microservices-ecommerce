@@ -13,7 +13,7 @@ import Cart from "./Cart";
 
 const Navbar = () => {
   return (
-    <nav className="flex items-center justify-between border-b border-b-gray-500 pb-2">
+    <nav className="flex items-center justify-between border-b border-black pb-4 pt-4 uppercase text-sm tracking-widest">
       {/* Brand section */}
       <Link href={"/"} className="flex gap-2 items-center">
         <Image
@@ -23,7 +23,7 @@ const Navbar = () => {
           className="w-6 h-6 md:w-9 md:h-9"
           alt="TrendShop"
         />
-        <span className="text-md font-medium md:text-xl lg:text-2xl tracking-wide">
+        <span className="font-heading font-bold text-xl md:text-2xl lg:text-3xl tracking-tighter">
           TrendShop
         </span>
       </Link>

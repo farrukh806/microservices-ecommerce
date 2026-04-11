@@ -5,7 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 * {
-  font-family: var(--font-roboto), sans-serif;
+  font-family: var(--font-inter), sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-syne), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
 }
 
 .product-list {
@@ -81,8 +87,8 @@ button:disabled, select:disabled, option:disabled {
 }
 /*---break---  */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: #F9F8F6;
+  --foreground: #000000;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -104,7 +110,7 @@ button:disabled, select:disabled, option:disabled {
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --radius: 0rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -116,8 +122,8 @@ button:disabled, select:disabled, option:disabled {
 }
 /*---break---  */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --background: #111111;
+  --foreground: #F9F8F6;
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
