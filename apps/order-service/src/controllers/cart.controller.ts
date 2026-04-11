@@ -29,7 +29,7 @@ export const cartController = {
     const productIds = cart.items.map((item) => item.productId);
     const products = await prisma.product.findMany({
       where: { id: { in: productIds } },
-      select: { id: true, name: true, images: true, price: true },
+      select: { id: true, name: true, images: true, price: true, inventory: true },
     });
     const productMap = new Map(products.map((p) => [p.id, p]));
 
@@ -56,6 +56,18 @@ export const cartController = {
       return reply.status(404).send({ message: "Product not found" });
     }
 
+    // Check available inventory
+    const inventory = await prisma.productInventory.findUnique({
+      where: { productId },
+    });
+    const availableQty = (inventory?.quantity ?? 0) - (inventory?.reservedQty ?? 0);
+
+    if (availableQty < quantity) {
+      return reply.status(400).send({
+        message: availableQty === 0 ? "Product is out of stock" : `Only ${availableQty} items available`,
+      });
+    }
+
     // Get or create cart
     let cart = await prisma.cart.findUnique({ where: { userId } });
     if (!cart) {
@@ -75,10 +87,18 @@ export const cartController = {
     });
 
     if (existing) {
+      const newQty = existing.quantity + quantity;
+      const totalNeeded = newQty;
+      const currentAvailable = availableQty + existing.quantity; // existing qty was already reserved
+      if (totalNeeded > currentAvailable) {
+        return reply.status(400).send({
+          message: `Only ${currentAvailable} items available`,
+        });
+      }
       // Update quantity
       await prisma.cartItem.update({
         where: { id: existing.id },
-        data: { quantity: existing.quantity + quantity },
+        data: { quantity: newQty },
       });
     } else {
       // Create new item
@@ -121,6 +141,17 @@ export const cartController = {
 
     if (!item) {
       return reply.status(404).send({ message: "Cart item not found" });
+    }
+
+    // Check stock for new quantity
+    const inventory = await prisma.productInventory.findUnique({
+      where: { productId },
+    });
+    const availableQty = (inventory?.quantity ?? 0) - (inventory?.reservedQty ?? 0) + item.quantity;
+    if (quantity > availableQty) {
+      return reply.status(400).send({
+        message: `Only ${availableQty} items available`,
+      });
     }
 
     await prisma.cartItem.update({

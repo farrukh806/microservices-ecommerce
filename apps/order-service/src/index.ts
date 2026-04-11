@@ -8,6 +8,9 @@ import cookieParser from "@fastify/cookie";
 import { clerkPlugin } from "@clerk/fastify";
 import orderRouter from "./routes/order.route.js";
 import cartRouter from "./routes/cart.route.js";
+import reviewRouter from "./routes/review.route.js";
+import wishlistRouter from "./routes/wishlist.route.js";
+import couponRouter from "./routes/coupon.route.js";
 import { errorHandler } from "./middleware/error.js";
 
 const PORT = 8001;
@@ -43,6 +46,9 @@ await fastify.register(cookieParser);
 console.log("Clerk keys loaded successfully");
 fastify.register(orderRouter);
 fastify.register(cartRouter);
+fastify.register(reviewRouter);
+fastify.register(wishlistRouter);
+fastify.register(couponRouter);
 
 // Run the server!
 fastify.listen({ port: PORT }, function (err, address) {

@@ -9,6 +9,7 @@ export const orderController = {
     const { shippingAddress, paymentMethod } = orderSchema.createOrder.parse(
       request.body,
     );
+    const couponCode = request.headers["x-coupon-code"] as string | undefined;
 
     // Get user's cart with items
     const cart = await prisma.cart.findUnique({
@@ -16,12 +17,12 @@ export const orderController = {
       include: { items: true },
     });
 
-    console.log("cart", cart)
+    console.log("cart", cart);
     if (!cart || cart.items.length === 0) {
       return reply.status(400).send({ message: "Cart is empty" });
     }
 
-    // Get product prices from DB
+    // Get product prices from DB (and inventory)
     const productIds = cart.items.map((item) => item.productId);
     const products = await prisma.product.findMany({
       where: { id: { in: productIds } },
@@ -30,11 +31,23 @@ export const orderController = {
 
     const productMap = new Map(products.map((p) => [p.id, p]));
 
-    // Verify all products exist
+    // Verify all products exist and check stock
     for (const item of cart.items) {
-      if (!productMap.has(item.productId)) {
+      const product = productMap.get(item.productId);
+      if (!product) {
         return reply.status(400).send({
           message: `Product ${item.productId} not found`,
+        });
+      }
+
+      // Check available inventory
+      const inventory = await prisma.productInventory.findUnique({
+        where: { productId: item.productId },
+      });
+      const availableQty = (inventory?.quantity ?? 0) - (inventory?.reservedQty ?? 0);
+      if (availableQty < item.quantity) {
+        return reply.status(400).send({
+          message: `Insufficient stock for product: ${product.name}`,
         });
       }
     }
@@ -45,12 +58,58 @@ export const orderController = {
       return sum + product.price * item.quantity;
     }, 0);
 
-    const shippingCost = subtotal > 100 ? 0 : 9.99;
-    const tax = subtotal * 0.08;
-    const total = subtotal + shippingCost + tax;
+    // Handle coupon discount
+    let discountAmount = 0;
+    let discountReason: string | undefined;
+    let couponId: string | undefined;
+
+    if (couponCode) {
+      const coupon = await prisma.coupon.findUnique({
+        where: { code: couponCode },
+      });
+
+      if (coupon && coupon.isActive && coupon.expiresAt > new Date() && coupon.startsAt <= new Date()) {
+        // Check usage limits
+        if (!coupon.usageLimit || coupon.usageCount < coupon.usageLimit) {
+          const userUsage = await prisma.order.count({ where: { userId, couponId: coupon.id } });
+          if (userUsage < coupon.perUserLimit) {
+            if (!coupon.minOrderAmount || subtotal >= coupon.minOrderAmount) {
+              couponId = coupon.id;
+
+              if (coupon.discountType === "PERCENTAGE") {
+                discountAmount = subtotal * (coupon.discountValue / 100);
+                if (coupon.maxDiscountAmount) {
+                  discountAmount = Math.min(discountAmount, coupon.maxDiscountAmount);
+                }
+                discountReason = `${coupon.code} applied (${coupon.discountValue}% off)`;
+              } else if (coupon.discountType === "FIXED_AMOUNT") {
+                discountAmount = Math.min(coupon.discountValue, subtotal);
+                discountReason = `${coupon.code} applied ($${coupon.discountValue} off)`;
+              } else if (coupon.discountType === "FREE_SHIPPING") {
+                discountAmount = 9.99;
+                discountReason = `${coupon.code} applied (free shipping)`;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    const taxableAmount = subtotal - discountAmount;
+    const shippingCost = subtotal > 100 - discountAmount || discountReason?.includes("free shipping") ? 0 : 9.99;
+    const tax = taxableAmount * 0.08;
+    const total = taxableAmount + shippingCost + tax;
 
     // Create order with items in transaction
     const order = await prisma.$transaction(async (tx) => {
+      // Reserve inventory for each item
+      for (const item of cart.items) {
+        await tx.productInventory.update({
+          where: { productId: item.productId },
+          data: { reservedQty: { increment: item.quantity } },
+        });
+      }
+
       const created = await tx.order.create({
         data: {
           userId,
@@ -60,6 +119,9 @@ export const orderController = {
           shippingCost,
           tax,
           total,
+          discountAmount,
+          discountReason,
+          couponId,
           items: {
             create: cart.items.map((item) => {
               const product = productMap.get(item.productId)!;
@@ -85,6 +147,14 @@ export const orderController = {
         include: { items: true, payment: true },
       });
 
+      // Update coupon usage count if applied
+      if (couponId) {
+        await tx.coupon.update({
+          where: { id: couponId },
+          data: { usageCount: { increment: 1 } },
+        });
+      }
+
       // Clear the cart
       await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
 
@@ -105,7 +175,7 @@ export const orderController = {
         skip: (query.page - 1) * query.size,
         take: query.size,
         orderBy: { createdAt: "desc" },
-        include: { items: true },
+        include: { items: true, coupon: true },
       }),
     ]);
 
@@ -127,7 +197,7 @@ export const orderController = {
 
     const order = await prisma.order.findUnique({
       where: { id },
-      include: { items: true, payment: true },
+      include: { items: true, payment: true, coupon: true },
     });
 
     if (!order) {
@@ -149,10 +219,24 @@ export const orderController = {
     const { id } = request.params;
     const { status } = orderSchema.updateOrderStatus.parse(request.body);
 
-    const order = await prisma.order.update({
-      where: { id },
-      data: { status },
-      include: { items: true },
+    const order = await prisma.$transaction(async (tx) => {
+      const updated = await tx.order.update({
+        where: { id },
+        data: { status },
+        include: { items: true },
+      });
+
+      // If cancelled, release reserved inventory
+      if (status === "CANCELLED") {
+        for (const item of order.items) {
+          await tx.productInventory.update({
+            where: { productId: item.productId },
+            data: { reservedQty: { decrement: item.quantity } },
+          });
+        }
+      }
+
+      return updated;
     });
 
     return reply.send(order);

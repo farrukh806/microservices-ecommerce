@@ -7,8 +7,13 @@ const router = Router();
 router.route("/upload").post(upload.array("images", 10), productController.uploadImages);
 router.route("/").post(productController.createProduct);
 router.route("/").get(productController.getProducts);
+router.route("/search").post(productController.searchProducts);
+router.route("/autocomplete").get(productController.autocomplete);
+router.route("/low-stock").get(productController.getLowStock);
+router.route("/inventory").get(productController.getAllInventory);
 router.route("/:id").get(productController.getProductById);
 router.route("/:id").put(productController.updateProduct);
 router.route("/:id").delete(productController.deleteProduct);
+router.route("/:id/inventory").patch(productController.updateInventory);
 
 export default router;

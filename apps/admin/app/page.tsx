@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Package, ShoppingCart, DollarSign, Users } from "lucide-react";
+import LowStockAlert from "@/components/LowStockAlert";
 
 const stats = [
   { title: "Total Products", value: "124", icon: Package, change: "+12%" },
@@ -11,7 +12,7 @@ const stats = [
 
 export default async function DashboardPage() {
   const { userId } = await auth();
-  
+
   if (!userId) {
     redirect("/sign-in");
   }
@@ -34,6 +35,10 @@ export default async function DashboardPage() {
             <p className="text-green-500 text-sm mt-2">{stat.change} this month</p>
           </div>
         ))}
+      </div>
+
+      <div className="mt-8">
+        <LowStockAlert />
       </div>
     </div>
   );

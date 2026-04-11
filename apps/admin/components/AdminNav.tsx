@@ -9,8 +9,11 @@ import {
   Layers,
   Users,
   Settings,
+  AlertTriangle,
+  Tag,
+  Star,
 } from "lucide-react";
-import { SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
@@ -26,14 +29,29 @@ const navItems = [
     icon: Package,
   },
   {
+    title: "Inventory",
+    href: "/inventory",
+    icon: AlertTriangle,
+  },
+  {
     title: "Orders",
     href: "/orders",
     icon: ShoppingCart,
   },
   {
+    title: "Coupons",
+    href: "/coupons",
+    icon: Tag,
+  },
+  {
     title: "Categories",
     href: "/categories",
     icon: Layers,
+  },
+  {
+    title: "Reviews",
+    href: "/reviews",
+    icon: Star,
   },
   {
     title: "Customers",
@@ -78,7 +96,7 @@ export default function AdminNav() {
           );
         })}
       </nav>
-      
+
       {/* Auth Section */}
       <div className="border-t border-gray-700 pt-4 mt-4">
         {isSignedIn ? (

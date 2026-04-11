@@ -128,6 +128,38 @@ export const productApi = {
     if (!res.ok) throw new Error("Failed to create category");
     return res.json();
   },
+
+  async searchProducts(data: {
+    q?: string;
+    page?: number;
+    size?: number;
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    sizes?: string;
+    colors?: string;
+    minRating?: number;
+    sortBy?: string;
+    inStock?: string;
+  }) {
+    const res = await fetch(`${PRODUCT_SERVICE_URL}/products/search`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Failed to search products");
+    return res.json();
+  },
+
+  async autocomplete(q: string, limit = 5) {
+    const searchParams = new URLSearchParams({ q, limit: String(limit) });
+    const res = await fetch(`${PRODUCT_SERVICE_URL}/products/autocomplete?${searchParams}`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to fetch suggestions");
+    return res.json();
+  },
 };
 
 export const cartApi = {
@@ -183,10 +215,13 @@ export const cartApi = {
 };
 
 export const orderApi = {
-  async createOrder(data: { shippingAddress: unknown; paymentMethod?: string }) {
+  async createOrder(data: { shippingAddress: unknown; paymentMethod?: string }, couponCode?: string) {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (couponCode) headers["x-coupon-code"] = couponCode;
+
     const res = await fetch(`${ORDER_SERVICE_URL}/order`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       credentials: "include",
       body: JSON.stringify(data),
     });
@@ -214,6 +249,17 @@ export const orderApi = {
     if (!res.ok) throw new Error("Failed to fetch order");
     return res.json();
   },
+
+  async validateCoupon(code: string, orderSubtotal: number) {
+    const res = await fetch(`${ORDER_SERVICE_URL}/orders/validate-coupon`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ code, orderSubtotal }),
+    });
+    if (!res.ok) throw new Error("Failed to validate coupon");
+    return res.json();
+  },
 };
 
 export const paymentApi = {
@@ -233,6 +279,77 @@ export const paymentApi = {
       credentials: "include",
     });
     if (!res.ok) throw new Error("Failed to fetch payment");
+    return res.json();
+  },
+};
+
+export const wishlistApi = {
+  async getWishlist() {
+    const res = await fetch(`${ORDER_SERVICE_URL}/wishlist`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to fetch wishlist");
+    return res.json();
+  },
+
+  async addItem(data: { productId: string; size?: string; color?: string }) {
+    const res = await fetch(`${ORDER_SERVICE_URL}/wishlist`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Failed to add to wishlist");
+    return res.json();
+  },
+
+  async removeItem(productId: string, size?: string, color?: string) {
+    const searchParams = new URLSearchParams({ productId });
+    if (size) searchParams.set("size", size);
+    if (color) searchParams.set("color", color);
+
+    const res = await fetch(`${ORDER_SERVICE_URL}/wishlist/${productId}?${searchParams}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to remove from wishlist");
+    return res.json();
+  },
+};
+
+export const reviewApi = {
+  async getReviews(params: { productId: string; page?: number; size?: number; sortBy?: string }) {
+    const searchParams = new URLSearchParams({ productId: params.productId });
+    if (params?.page) searchParams.set("page", String(params.page));
+    if (params?.size) searchParams.set("size", String(params.size));
+    if (params?.sortBy) searchParams.set("sortBy", params.sortBy);
+
+    const res = await fetch(`${ORDER_SERVICE_URL}/reviews?${searchParams}`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to fetch reviews");
+    return res.json();
+  },
+
+  async createReview(data: { productId: string; rating: number; title?: string; content?: string; photos?: string[] }) {
+    const res = await fetch(`${ORDER_SERVICE_URL}/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Failed to create review");
+    return res.json();
+  },
+
+  async voteReview(id: string, helpful: boolean) {
+    const res = await fetch(`${ORDER_SERVICE_URL}/reviews/${id}/vote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ helpful }),
+    });
+    if (!res.ok) throw new Error("Failed to vote on review");
     return res.json();
   },
 };

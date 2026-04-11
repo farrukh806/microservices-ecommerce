@@ -105,20 +105,59 @@ export const paymentController = {
       return c.json({ message: "Webhook signature verification failed" }, 400);
     }
 
+    const emailServiceUrl = process.env.EMAIL_SERVICE_URL || "http://localhost:8003";
+
     try {
       switch (event.type) {
       case "payment_intent.succeeded": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         const orderId = paymentIntent.metadata?.orderId;
         if (orderId) {
-          await prisma.payment.update({
-            where: { orderId },
-            data: { status: "SUCCEEDED" },
-          });
-          await prisma.order.update({
+          // Get order with items to deduct inventory
+          const order = await prisma.order.findUnique({
             where: { id: orderId },
-            data: { status: "CONFIRMED" },
+            include: { items: true, user: true },
           });
+
+          if (order) {
+            // Update payment and order status
+            await prisma.payment.update({
+              where: { orderId },
+              data: { status: "SUCCEEDED" },
+            });
+            await prisma.order.update({
+              where: { id: orderId },
+              data: { status: "CONFIRMED" },
+            });
+
+            // Deduct inventory (convert reserved to sold)
+            await prisma.$transaction(
+              order.items.map((item) =>
+                prisma.productInventory.update({
+                  where: { productId: item.productId },
+                  data: {
+                    quantity: { decrement: item.quantity },
+                    reservedQty: { decrement: item.quantity },
+                  },
+                }),
+              ),
+            );
+
+            // Trigger order confirmation email
+            try {
+              await fetch(`${emailServiceUrl}/send/order-confirmation`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  orderId,
+                  email: order.user.email,
+                  userName: order.user.firstName,
+                }),
+              });
+            } catch (emailErr) {
+              console.error("Failed to send order confirmation email:", emailErr);
+            }
+          }
         }
         break;
       }
@@ -126,10 +165,27 @@ export const paymentController = {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         const orderId = paymentIntent.metadata?.orderId;
         if (orderId) {
+          const order = await prisma.order.findUnique({
+            where: { id: orderId },
+            include: { items: true },
+          });
+
           await prisma.payment.update({
             where: { orderId },
             data: { status: "FAILED" },
           });
+
+          // Release reserved inventory
+          if (order) {
+            await prisma.$transaction(
+              order.items.map((item) =>
+                prisma.productInventory.update({
+                  where: { productId: item.productId },
+                  data: { reservedQty: { decrement: item.quantity } },
+                }),
+              ),
+            );
+          }
         }
         break;
       }
