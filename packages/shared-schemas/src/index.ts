@@ -4,3 +4,7 @@ export * from "./order.js";
 export * from "./cart.js";
 export * from "./payment.js";
 export * from "./address.js";
+export * from "./review.js";
+export * from "./wishlist.js";
+export * from "./coupon.js";
+export * from "./notification.js";

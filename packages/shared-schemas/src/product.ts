@@ -164,5 +164,63 @@ export const productSchema = {
       });
     }
   }),
+
+  search: z.object({
+    q: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.string().trim().min(1).optional(),
+    ),
+    page: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.coerce.number().int().min(1).default(1),
+    ),
+    size: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.coerce.number().int().min(1).max(100).default(20),
+    ),
+    category: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.string().trim().min(1).optional(),
+    ),
+    minPrice: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.coerce.number().min(0).optional(),
+    ),
+    maxPrice: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.coerce.number().min(0).optional(),
+    ),
+    sizes: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.string().optional(),
+    ),
+    colors: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.string().optional(),
+    ),
+    minRating: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.coerce.number().min(1).max(5).optional(),
+    ),
+    sortBy: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.enum(["relevance", "price_asc", "price_desc", "rating", "newest"]).default("relevance"),
+    ),
+    inStock: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.string().optional(),
+    ),
+  }),
+
+  autocomplete: z.object({
+    q: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.string().trim().min(2).max(50),
+    ),
+    limit: z.preprocess(
+      (v) => (Array.isArray(v) ? v[0] : v),
+      z.coerce.number().int().min(1).max(10).default(5),
+    ),
+  }),
 };
 export type CreateProduct = z.infer<typeof productSchema.createProduct>;
