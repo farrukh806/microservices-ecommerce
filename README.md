@@ -67,8 +67,9 @@ All apps and packages use **TypeScript**.
 From the repo root:
 
 ```bash
+npm i turbo -g
 npm install
-npm run dev
+turbo dev
 ```
 
 Or launch an individual app:
