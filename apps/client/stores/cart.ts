@@ -1,5 +1,5 @@
 import { createStore } from "zustand/vanilla";
-import { ICartItem } from "../types/product";
+import { type ICartItem } from "../types/product";
 
 export type CartState = {
   products: ICartItem[];

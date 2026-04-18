@@ -3,18 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Search, X } from "lucide-react";
 import { productApi } from "../lib/api-client";
 import Link from "next/link";
-
-interface SearchOverlayProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-interface SearchResult {
-  id: string;
-  name: string;
-  price: number;
-  image: string | null;
-}
+import { type SearchOverlayProps, type SearchResult } from "../types/components";
 
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState("");

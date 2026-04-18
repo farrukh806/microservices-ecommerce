@@ -13,13 +13,9 @@ import {
   categoryFormValidationSchema,
   type CategoryFormValues,
 } from "../../validations";
+import { type CreateCategoryProps } from "../../types/components";
 
 const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "http://localhost:8000";
-
-type CreateCategoryProps = {
-  onSuccess?: (category: { slug: string; name: string }) => void;
-  onCancel?: () => void;
-};
 
 export default function CreateCategoryForm({ onSuccess, onCancel }: CreateCategoryProps = {}) {
   const form = useForm<CategoryFormValues>({

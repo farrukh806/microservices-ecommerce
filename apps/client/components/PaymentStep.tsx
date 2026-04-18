@@ -5,8 +5,7 @@ import { LoaderCircle, CheckCircle, CreditCard, RotateCcw } from "lucide-react";
 import { Button } from "./ui/button";
 import { paymentApi, orderApi } from "../lib/api-client";
 import toast from "react-hot-toast";
-
-type PaymentStatus = "idle" | "processing" | "success" | "error";
+import { type PaymentStatus } from "../types/components";
 
 const PaymentStepContent: React.FC = () => {
   const searchParams = useSearchParams();

@@ -1,21 +1,7 @@
 "use client";
 import React from "react";
 import StarRating from "./StarRating";
-
-interface ReviewCardProps {
-  review: {
-    id: string;
-    rating: number;
-    title?: string | null;
-    content?: string | null;
-    photos: string[];
-    helpfulVotes: number;
-    createdAt: Date | string;
-    user: { firstName?: string | null; lastName?: string | null };
-    orderId?: string | null;
-  };
-  onVote?: (reviewId: string, helpful: boolean) => void;
-}
+import { type ReviewCardProps } from "../types/components";
 
 export default function ReviewCard({ review, onVote }: ReviewCardProps) {
   const userName = [review.user?.firstName, review.user?.lastName].filter(Boolean).join(" ") || "Anonymous";

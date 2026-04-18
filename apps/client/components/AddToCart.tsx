@@ -1,16 +1,14 @@
 "use client";
 
 import React from "react";
-import { ICartItem } from "../types/product";
 import toast from "react-hot-toast";
 import { useCartStore } from "../providers/cart-store-provider";
 import { cartApi } from "../lib/api-client";
+import { type IAddToCartButton } from "../types/components";
 
-interface IAddToCartButton {
-  product: ICartItem;
-}
+type AddToCartButtonProps = IAddToCartButton;
 
-const AddToCartButton: React.FC<IAddToCartButton> = ({ product }) => {
+const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product }) => {
   const addProduct = useCartStore((selector) => selector.addProduct);
 
   const addItemToCart = async () => {

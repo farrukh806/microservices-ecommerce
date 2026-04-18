@@ -5,18 +5,8 @@ import ProductCard from "./ProductCard";
 
 const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL || "http://localhost:8000";
 import { IProduct } from "../types/product";
-
-interface ProductListProps {
-  activeCategory: string;
-}
-
-interface ApiResponse {
-  items: IProduct[];
-  page: number;
-  pageSize: number;
-  total: number;
-  totalPages: number;
-}
+import { type ProductListProps } from "../types/components";
+import { type ApiResponse } from "../types/api";
 
 const ProductList: React.FC<ProductListProps> = ({ activeCategory }) => {
   const [products, setProducts] = useState<IProduct[]>([]);

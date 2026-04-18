@@ -4,10 +4,7 @@ import React from "react";
 import { useCartStore } from "../providers/cart-store-provider";
 import { useRouter } from "next/navigation";
 import { CART_STEP_NAME } from "../app/constants";
-
-interface ICartPricing {
-  showContinueButton?: boolean;
-}
+import { type ICartPricing } from "../types/components";
 
 const CartPricing: React.FC<ICartPricing> = ({ showContinueButton = true }) => {
   const router = useRouter();

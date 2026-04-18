@@ -1,44 +1,16 @@
 import { createStore } from "zustand/vanilla";
+import {
+  type WishlistItem,
+  type WishlistState,
+  type WishlistActions,
+  type WishlistStore,
+  defaultWishlistInitState,
+} from "../types/wishlist";
 
-export type WishlistItem = {
-  id: string;
-  productId: string;
-  size: string | null;
-  color: string | null;
-  product: {
-    id: string;
-    name: string;
-    price: number;
-    images: Record<string, string>;
-    inventory: { quantity: number } | null;
-  };
-  createdAt: Date;
-};
+export type { WishlistItem, WishlistState, WishlistActions, WishlistStore };
+export { defaultWishlistInitState };
 
-export type WishlistState = {
-  items: WishlistItem[];
-  hydrated: boolean;
-  isLoading: boolean;
-};
-
-export type WishlistActions = {
-  setItems: (items: WishlistItem[]) => void;
-  addItem: (item: WishlistItem) => void;
-  removeItem: (productId: string) => void;
-  clearWishlist: () => void;
-  setHydrated: (hydrated: boolean) => void;
-  setLoading: (loading: boolean) => void;
-};
-
-export type WishlistStore = WishlistState & WishlistActions;
-
-export const defaultInitState: WishlistState = {
-  items: [],
-  hydrated: false,
-  isLoading: false,
-};
-
-export const createWishlistStore = (initState: WishlistState = defaultInitState) => {
+export const createWishlistStore = (initState: WishlistState = defaultWishlistInitState) => {
   return createStore<WishlistStore>()((set) => ({
     ...initState,
 

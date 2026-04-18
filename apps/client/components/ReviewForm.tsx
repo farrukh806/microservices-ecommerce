@@ -3,12 +3,7 @@ import React, { useState } from "react";
 import StarRating from "./StarRating";
 import { reviewApi } from "../lib/api-client";
 import toast from "react-hot-toast";
-
-interface ReviewFormProps {
-  productId: string;
-  onSuccess?: () => void;
-  onClose?: () => void;
-}
+import { type ReviewFormProps } from "../types/components";
 
 export default function ReviewForm({ productId, onSuccess, onClose }: ReviewFormProps) {
   const [rating, setRating] = useState(0);

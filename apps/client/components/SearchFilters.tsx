@@ -1,26 +1,7 @@
 "use client";
 import React from "react";
 import { X } from "lucide-react";
-
-interface SearchFiltersProps {
-  facets: {
-    categories: { slug: string; name: string; count: number }[];
-    sizes: { value: string; count: number }[];
-    colors: { value: string; count: number }[];
-    priceRange: { min: number; max: number };
-  };
-  filters: {
-    category?: string;
-    sizes?: string;
-    colors?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    minRating?: number;
-    inStock?: string;
-  };
-  onFilterChange: (key: string, value: string | undefined) => void;
-  onClear: () => void;
-}
+import { type SearchFiltersProps } from "../types/components";
 
 export default function SearchFilters({ facets, filters, onFilterChange, onClear }: SearchFiltersProps) {
   const hasActiveFilters = Object.values(filters).some(Boolean);
