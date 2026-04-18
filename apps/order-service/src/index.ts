@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import path from "node:path";
-dotenv.config(path.resolve(__dirname, "../../.env"));
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 import Fastify from "fastify";
 import cors from "@fastify/cors";
