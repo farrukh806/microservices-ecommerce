@@ -201,7 +201,9 @@ Default local ports:
 Install dependencies from the repo root:
 
 ```bash
+npm i turbo -g
 npm install
+turbo dev
 ```
 
 Run the whole workspace with Turborepo:
