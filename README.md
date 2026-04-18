@@ -209,24 +209,13 @@ turbo dev
 Run the whole workspace with Turborepo:
 
 ```bash
-npm run dev
+turbo dev
 ```
 
 Run type checks across the workspace:
 
 ```bash
-npm run check-types
-```
-
-Run an individual app or package:
-
-```bash
-npm --workspace client run dev
-npm --workspace admin run dev
-npm --workspace product-service run dev
-npm --workspace order-service run dev
-npm --workspace payment-service run dev
-npm --workspace email-service run dev
+turbo check-types
 ```
 
 ## Database
@@ -234,19 +223,19 @@ npm --workspace email-service run dev
 Generate the Prisma client:
 
 ```bash
-npm --workspace @repo/product-db run db:generate
+turbo db:generate
 ```
 
 Apply committed migrations:
 
 ```bash
-npm --workspace @repo/product-db run db:deploy
+turbo db:deploy
 ```
 
 Create a new migration during development:
 
 ```bash
-npm --workspace @repo/product-db run db:migrate
+turbo db:migrate
 ```
 
 ## Environment
