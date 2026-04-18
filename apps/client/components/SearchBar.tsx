@@ -5,8 +5,8 @@ import { Input } from "./ui/input";
 const SearchBar = () => {
   return (
     <div className="hidden sm:flex items-center gap-2">
-      <Search className="w-4 h-4 text-black" />
-      <Input className="h-8 w-[150px] lg:w-[250px] border border-black rounded-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-500 placeholder:uppercase placeholder:text-xs uppercase text-xs tracking-wider" placeholder="Search..." />
+      <Search className="h-4 w-4 text-muted-foreground" />
+      <Input className="h-8 w-[150px] rounded-none border border-border bg-transparent text-xs uppercase tracking-wider focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground placeholder:text-xs placeholder:uppercase lg:w-[250px]" placeholder="Search..." />
     </div>
   );
 };

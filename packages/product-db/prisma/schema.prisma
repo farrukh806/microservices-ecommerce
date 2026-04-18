@@ -273,3 +273,20 @@ model BackInStockSubscription {
   @@unique([userId, productId])
   @@index([productId, isActive])
 }
+
+model StorefrontThemeSettings {
+  id                String   @id @default("global")
+  background        String
+  foreground        String
+  primary           String
+  primaryForeground String
+  accent            String
+  accentForeground  String
+  card              String
+  cardForeground    String
+  border            String
+  headingFont       String
+  bodyFont          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

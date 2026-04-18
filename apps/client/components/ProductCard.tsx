@@ -44,10 +44,10 @@ const ProductCard: React.FC<IProduct> = (props) => {
   const productUrl = `/products/${props.id}`;
 
   return (
-    <div className="bg-transparent border border-black product-card rounded-none hover:border-gray-800 transition-colors group">
+    <div className="product-card group rounded-none border border-border bg-transparent transition-colors hover:border-foreground">
       <Link href={productUrl} className="block">
         {typeof selectedColor === "string" && (
-          <div className="relative w-full aspect-320/430 overflow-hidden bg-gray-100 border-b border-black">
+          <div className="relative aspect-320/430 w-full overflow-hidden border-b border-border bg-accent">
             <Image
               src={images[selectedColor as keyof typeof images] as string}
               fill
@@ -58,15 +58,15 @@ const ProductCard: React.FC<IProduct> = (props) => {
           </div>
         )}
         <h3 className="px-3 pt-3 font-heading font-bold text-lg uppercase tracking-wide">{name}</h3>
-        <p className="text-gray-600 tracking-wide text-sm px-3 pb-3">
+        <p className="px-3 pb-3 text-sm tracking-wide text-muted-foreground">
           {props.shortDescription}
         </p>
       </Link>
       <div className="flex gap-5 px-3 pb-3">
         <div className="flex flex-col">
-          <span className="text-xs text-gray-400">Size</span>
+          <span className="text-xs text-muted-foreground">Size</span>
           <select
-            className="border-0 outline-0 w-10 h-5"
+            className="h-5 w-10 border-0 bg-transparent outline-0"
             name="size"
             id="size"
             onChange={(e) => setSelectedSize(e.target.value)}
@@ -79,7 +79,7 @@ const ProductCard: React.FC<IProduct> = (props) => {
           </select>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs text-gray-400">Color</span>
+          <span className="text-xs text-muted-foreground">Color</span>
           <div className="flex gap-3">
             {colors.map((color) => (
               <button
@@ -87,22 +87,22 @@ const ProductCard: React.FC<IProduct> = (props) => {
                 type="button"
                 style={{ backgroundColor: color }}
                 onClick={() => setSelectedColor(color)}
-                className={`w-5 h-5 rounded-full border-2 border-white ${selectedColor === color ? "outline outline-gray-500" : ""}`}
+                className={`h-5 w-5 rounded-full border-2 border-card ${selectedColor === color ? "outline outline-border" : ""}`}
               ></button>
             ))}
           </div>
         </div>
       </div>
-      <div className="flex justify-between border-t border-black mt-auto">
+      <div className="mt-auto flex justify-between border-t border-border">
         <Link href={productUrl} className="font-heading font-bold text-lg self-center px-4 w-1/3">
           ${price}
         </Link>
         <button
           type="button"
           onClick={addProductToCart}
-          className="add-to-cart flex flex-1 justify-center gap-2 items-center bg-black text-white hover:bg-gray-900 transition-colors px-4 py-3 uppercase text-xs tracking-widest font-semibold border-l border-black"
+          className="add-to-cart flex flex-1 items-center justify-center gap-2 border-l border-border bg-primary px-4 py-3 text-xs font-semibold uppercase tracking-widest text-primary-foreground transition-opacity hover:opacity-90"
         >
-          <ShoppingCartIcon width={16} height={16} className="text-white" />
+          <ShoppingCartIcon width={16} height={16} className="text-current" />
           <span>Add to Cart</span>
         </button>
       </div>

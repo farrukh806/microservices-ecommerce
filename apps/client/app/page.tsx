@@ -10,20 +10,20 @@ export default async function Home({
   const activeCategory = (await searchParams).category;
   return (
     <section className="mt-8">
-      <div className="flex flex-col lg:flex-row items-center border-b border-black pb-12 mb-12">
+      <div className="flex flex-col lg:flex-row items-center border-b border-border pb-12 mb-12">
         <div className="w-full lg:w-1/2 pe-0 lg:pe-8 mb-8 lg:mb-0">
           <h1 className="text-6xl md:text-8xl font-bold font-heading leading-[0.85]">
             MOMENTS OF BEAUTY
           </h1>
-          <p className="mt-8 text-lg text-gray-800 max-w-md">
+          <p className="mt-8 max-w-md text-lg text-muted-foreground">
             Discover our meticulously curated collection designed to elevate your everyday aesthetics.
           </p>
-          <button className="mt-10 bg-black text-white px-8 py-4 text-sm font-semibold tracking-widest uppercase hover:bg-black/80 transition-colors">
+          <button className="mt-10 bg-primary text-primary-foreground px-8 py-4 text-sm font-semibold tracking-widest uppercase transition-colors hover:opacity-90">
             Explore Collection
           </button>
         </div>
-        <div className="w-full lg:w-1/2 border border-black p-2">
-          <div className="relative aspect-video w-full bg-gray-100">
+        <div className="w-full lg:w-1/2 border border-border p-2">
+          <div className="relative aspect-video w-full bg-accent">
             <Image
               src={"/featured.png"}
               fill

@@ -13,7 +13,7 @@ import Cart from "./Cart";
 
 const Navbar = () => {
   return (
-    <nav className="flex items-center justify-between border-b border-black pb-4 pt-4 uppercase text-sm tracking-widest">
+    <nav className="flex items-center justify-between border-b border-border pb-4 pt-4 uppercase text-sm tracking-widest">
       {/* Brand section */}
       <Link href={"/"} className="flex gap-2 items-center">
         <Image
@@ -32,9 +32,9 @@ const Navbar = () => {
       <div className="flex items-center gap-6">
         <SearchBar />
         <Link href={"/"}>
-          <Home className="w-4 h-4 text-gray-500 hover:text-gray-900" />
+          <Home className="w-4 h-4 text-muted-foreground transition-colors hover:text-foreground" />
         </Link>
-        <Bell className="w-4 h-4 text-gray-500 hover:text-gray-900" />
+        <Bell className="w-4 h-4 text-muted-foreground transition-colors hover:text-foreground" />
         <Cart />
         <SignedOut>
           <SignInButton />

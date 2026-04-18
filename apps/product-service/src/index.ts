@@ -21,6 +21,7 @@ import { clerkMiddleware } from "@clerk/express";
 import productRouter from "./routes/product.route.js";
 import categoryRouter from "./routes/category.route.js";
 import userRouter from "./routes/user.route.js";
+import settingsRouter from "./routes/settings.route.js";
 import { validationErrorHandler } from "./middleware/validation.js";
 
 const app = express();
@@ -38,6 +39,7 @@ app.use(express.json());
 app.use("/products", productRouter);
 app.use("/categories", categoryRouter);
 app.use("/users", userRouter);
+app.use("/settings", settingsRouter);
 
 app.use(validationErrorHandler);
 
